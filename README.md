@@ -1,3 +1,23 @@
+
+# 🌟 Mita Bot MD 🌟
+
+<p align="center">
+  <img src="https://i.ibb.co/BVt9McxS/photo-2025-06-15-12-14-29-7516148628621099032.jpg" alt="Silva Spark MD Logo" width="600"/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/SilvaTechB">
+    <img src="http://readme-typing-svg.herokuapp.com?color=6A0DAD&size=26&center=true&vCenter=true&width=500&lines=✨+Mita+Bot+MD;⚡+Powering+Your+WhatsApp+Experience;🌟+Star+and+Fork+This+Repo" alt="Header Typing SVG">
+  </a>
+</p>
+
+> **  </a>
+</p>
+
+---🚀 Creado por JonathanG and Mancos y Asociados| 🔥 Deja tu estrellita en el repositorio  | 💜 mondongo**
+
+
+
 # <p align="center"><img src="https://files.catbox.moe/1d1nyg.jpg" width="400" height="400" alt="MITA"/></p>
 
 <p align="center">
