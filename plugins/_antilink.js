@@ -20,8 +20,8 @@ if (isBotAdmin) {
 const linkThisGroup = `https://chat.whatsapp.com/${await this.groupInviteCode(m.chat)}`;
 if (m.text.includes(linkThisGroup)) return !0;
 }
-await conn.sendMessage(m.chat, { text: `*「 ENLACE DETECTADO 」*\n\n《✧》${user} Rompiste las reglas del Grupo serás eliminado...`, mentions: [m.sender] }, { quoted: m, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100 });
-if (!isBotAdmin) return conn.sendMessage(m.chat, { text: `✦ El antilink está activo pero no puedo eliminarte porque no soy admin.`, mentions: [...groupAdmins.map(v => v.id)] }, { quoted: m });
+await conn.sendMessage(m.chat, { text: `*HE DETECTADO UN ENLACE*\n\n${user} Rompiste las reglas del Grupo serás eliminado...`, mentions: [m.sender] }, { quoted: m, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100 });
+if (!isBotAdmin) return conn.sendMessage(m.chat, { text: `El antilink está activo pero no puedo eliminarte porque no soy admin.`, mentions: [...groupAdmins.map(v => v.id)] }, { quoted: m });
 if (isBotAdmin) {
 await conn.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: bang, participant: delet } });
 let responseb = await conn.groupParticipantsUpdate(m.chat, [m.sender], 'remove');
