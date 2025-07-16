@@ -11,10 +11,7 @@
   </a>
 </p>
 
-> **  </a>
-</p>
-
----🚀 Creado por JonathanG and Mancos y Asociados| 🔥 Deja tu estrellita en el repositorio  | 💜 mondongo**
+> **🚀 Creado por JonathanG and Mancos y Asociados| 🔥 Deja tu estrellita en el repositorio  | 💜 mondongo**
 
 ---
 
