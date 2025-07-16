@@ -79,7 +79,7 @@
 </div>
 
 <p align="center">
-<img src="https://files.catbox.moe/pltsos.jpg" width="400" height="400" alt="ABRAHAN-M"/>
+<img src="https://files.catbox.moe/o3gtwe.jpg" width="400" height="400" alt="ABRAHAN-M"/>
 <br>
 <strong>JonathanG</strong>
 </p>
