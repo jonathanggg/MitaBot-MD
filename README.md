@@ -53,11 +53,11 @@
 
 ### `—◉ DESARROLLADORES`
 
-<a href="wa.me/51964351354" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_1-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://wa.me/50557333744" target="blank"><img src="https://img.shields.io/badge/JonathanG-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="wa.me/51920227615" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_2-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://wa.me/51941247696" target="blank"><img src="https://img.shields.io/badge/Gabriel-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="wa.me/59169082575" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_3-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://wa.me/56940429343" target="blank"><img src="https://img.shields.io/badge/Abrahan-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 <a href="wa.me/473237649689" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_4-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
