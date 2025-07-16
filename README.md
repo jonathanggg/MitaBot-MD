@@ -16,7 +16,7 @@
 
 ---🚀 Creado por JonathanG and Mancos y Asociados| 🔥 Deja tu estrellita en el repositorio  | 💜 mondongo**
 
-
+---
 
 # <p align="center"><img src="https://files.catbox.moe/1d1nyg.jpg" width="400" height="400" alt="MITA"/></p>
 
