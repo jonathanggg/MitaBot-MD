@@ -49,7 +49,7 @@
 
 <a href="https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00" target="blank"><img src="https://img.shields.io/badge/CANAL_UPDATES_MITA-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="https://whatsapp.com/channel/0029VaehG4gKmCPX449RbA2T" target="blank"><img src="https://img.shields.io/badge/GRUPO_DE_SOPORTE-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://chat.whatsapp.com/JnJrquajsdqINd2qE1pV8r?mode=r_c" target="blank"><img src="https://img.shields.io/badge/GRUPO_DEL_BOT-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 ### `—◉ DESARROLLADORES`
 
@@ -63,7 +63,7 @@
 
 <a href="wa.me/526633900512" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_5-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="wa.me/50557333744" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_6-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="https://wa.me/50557333744" target="blank"><img src="https://img.shields.io/badge/JonathanG-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 <p align="center">
 <img src="https://github.com/DIEGO-OFC/DORRAT-BOT-MD/blob/main/src/getOut.gif" alt="gif" width="400"/>
