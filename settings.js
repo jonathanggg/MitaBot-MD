@@ -33,7 +33,7 @@ global.prems = ['50557333744']
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.libreria = 'Baileys'
-global.baileys = 'V 6.7.16' 
+global.baileys = 'V 6.7.17' 
 global.languaje = 'Español'
 global.vs = '1.0.0'
 global.nameqr = 'MitaBot-MD'
@@ -62,13 +62,13 @@ global.avatar = 'https://tinyurl.com/258ghupn'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.gp1 = 'https://chat.whatsapp.com/DT2hwaaIKMh10bo6FnDYGO'
+global.gp1 = 'https://chat.whatsapp.com/JnJrquajsdqINd2qE1pV8r?mode=r_c'
 global.comunidad1 = 'https://chat.whatsapp.com/DFM4O5znWumLXnVwEWU3qZ'
-global.channel = 'https://whatsapp.com/channel/0029VawknnCKQuJKpYEYq500'
+global.channel = 'https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00'
 global.channel2 = 'https://whatsapp.com/channel/0029VawknnCKQuJKpYEYq500'
-global.md = 'https://github.com/jonathanggg/kennybot'
+global.md = 'https://github.com/jonathanggg/MitaBot-MD'
 global.correo = 'jg4824261@gmail.com'
-global.cn ='https://whatsapp.com/channel/0029VawknnCKQuJKpYEYq500';
+global.cn ='https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00';
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
