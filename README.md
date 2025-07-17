@@ -65,7 +65,7 @@
 
 
 <p align="center">
-<img src="https://github.com/DIEGO-OFC/DORRAT-BOT-MD/blob/main/src/getOut.gif" alt="gif" width="400"/>
+<img src="https://files.catbox.moe/lux4g2.mp4" alt="gif" width="400"/>
 </p>
 
 <div align="center">
