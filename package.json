@@ -1,7 +1,7 @@
 {
 "name": "MitaBot-MD",
 "version": "1.0.0",
-"description": "Super WhatsApp Bot Multi Device",
+"description": "Super Crazy WhatsApp Bot Multi Device",
 "main": "index.js",
 "type": "module",
 "directories": {
@@ -18,16 +18,16 @@
 "eslint": "eslint .",
 "eslintfix": "eslint --fix ."
 },
-"homepage": "https://github.com/The-King-Destroy/Yuki_Suou-Bot",
+"homepage": "https://github.com/jonathanggg/MitaBot-MD",
 "author": {
 "name": "JonathanG"
 },
 "repository": {
 "type": "git",
-"url": "git+https://github.com/The-King-Destroy/Yuki_Suou-Bot.git"
+"url": "git+https://github.com/jonathanggg/MitaBot-MD.git"
 },
 "bugs": {
-"url": "https://github.com/The-King-Destroy/Yuki_Suou-Bot/issues"
+"url": "https://github.com/jonathanggg/MitaBot-MD/issues"
 },
 "license": "GPL-3.0-or-later",
 "dependencies": {
