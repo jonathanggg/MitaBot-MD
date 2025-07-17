@@ -59,7 +59,6 @@ const handler = async (m, { conn, args, usedPrefix, command }) => {
 handler.help = ['qc'];
 handler.tags = ['sticker'];
 handler.group = true;
-handler.register = true;
 handler.command = ['qc'];
 
 export default handler;
