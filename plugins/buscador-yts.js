@@ -19,12 +19,11 @@ case 'video': return `「✦」Resultados de la búsqueda para *<${text}>*
 > 👀 Vistas » *${v.views}*
 > 🔗 Enlace » ${v.url}`}}).filter(v => v).join('\n\n••••••••••••••••••••••••••••••••••••\n\n')
 
-conn.sendFile(m.chat, tes[0].thumbnail, 'yts.jpeg', teks, fkontak, m)
+conn.sendFile(m.chat, tes[0].thumbnail, 'yts.jpeg', teks, m)
 
 }
 handler.help = ['ytsearch']
 handler.tags = ['buscador']
 handler.command = ['ytbuscar', 'ytsearch', 'yts']
-handler.register = true
 
 export default handler
