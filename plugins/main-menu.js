@@ -25,12 +25,12 @@ function clockString(ms) {
 
 let handler = async (m, { conn, args }) => {
     let userId = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.sender;
-    let user = global.db.data.users[userId]; // Asume que global.db.data.users existe
+    let user = global.db.data.users[userId]; 
     let name = conn.getName(userId);
     let _uptime = process.uptime() * 1000;
     let uptime = clockString(_uptime);
-    let totalreg = Object.keys(global.db.data.users).length; // Asume global.db.data.users
-    let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length; // Asume global.plugins
+    let totalreg = Object.keys(global.db.data.users).length; 
+    let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length; 
     
     let botSettings = global.db.data.settings[conn.user.jid] || {};
     
@@ -75,7 +75,7 @@ let bot = global.db.data.settings[conn.user.jid]
                 forwardingScore: 999,
                 externalAdReply: {
                     title: botname, 
-                    body: global.textbot, 
+                    body: textbot, 
                     thumbnailUrl: selectedMediaUrl, 
                     sourceUrl: redes,
                     mediaType: 1, 
