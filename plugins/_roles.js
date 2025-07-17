@@ -1,4 +1,3 @@
-//Destroy.....
 const roles = {
 '*Aventurero(a) - Novato(a) V*': 0,
 '*Aventurero(a) - Novato(a) IV*': 2,
