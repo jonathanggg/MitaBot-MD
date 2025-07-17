@@ -12,7 +12,7 @@ const menuImages = [
 ];
 // --- --- --- --- --- --- --- --- --- --- -
 
-// Función auxiliar para el tiempo de actividad (uptime) - tomada de Menu 2
+// Función auxiliar para el tiempo de actividad 
 function clockString(ms) {
     let d = isNaN(ms) ? '--' : Math.floor(ms / 86400000)
     let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24
@@ -33,11 +33,10 @@ let handler = async (m, { conn, args }) => {
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length; // Asume global.plugins
     
     let botSettings = global.db.data.settings[conn.user.jid] || {};
-    let bottName = botSettings.botName || botname
-
+    
 
     let txt = `
-¡Hola ${name}! 👋 Me llamo ${bottName}.
+¡Hola ${name}! 👋 Me llamo ${botname}.
 
 Uptime: ${uptime}
 Usuarios Registrados: ${totalreg}
@@ -62,7 +61,6 @@ let bot = global.db.data.settings[conn.user.jid]
             mentions: [m.sender, userId] // Menciona a los usuarios relevantes
         };
     } else if (menuImages.length > 0) {
-        // --- Preparar mensaje con Imagen (usando externalAdReply como en Menu 2) ---
         selectedMediaUrl = menuImages[Math.floor(Math.random() * menuImages.length)];
         messageOptions = {
             text: txt,
@@ -78,7 +76,7 @@ let bot = global.db.data.settings[conn.user.jid]
                 externalAdReply: {
                     title: botname, 
                     body: global.textbot, 
-                    thumbnailUrl:  bot.logo.selectedMediaUrl || banner, 
+                    thumbnailUrl: selectedMediaUrl, 
                     sourceUrl: redes,
                     mediaType: 1, 
                     showAdAttribution: false, 
