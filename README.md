@@ -59,11 +59,8 @@
 
 <a href="https://wa.me/56940429343" target="blank"><img src="https://img.shields.io/badge/Abrahan-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="wa.me/473237649689" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_4-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
+<a href="wa.me/51901930696" target="blank"><img src="https://img.shields.io/badge/~ i.amdev.angel.xyz-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
-<a href="wa.me/526633900512" target="blank"><img src="https://img.shields.io/badge/DESARROLLADOR_5-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
-
-<a href="https://wa.me/50557333744" target="blank"><img src="https://img.shields.io/badge/JonathanG-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 <p align="center">
 <img src="https://github.com/DIEGO-OFC/DORRAT-BOT-MD/blob/main/src/getOut.gif" alt="gif" width="400"/>
@@ -79,7 +76,7 @@
 </div>
 
 <p align="center">
-<img src="https://files.catbox.moe/o3gtwe.jpg" width="400" height="400" alt="ABRAHAN-M"/>
+<img src="https://files.catbox.moe/o3gtwe.jpg" width="400" height="400" alt="JonathanG"/>
 <br>
 <strong>JonathanG</strong>
 </p>
