@@ -29,7 +29,7 @@
 "bugs": {
 "url": "https://github.com/jonathanggg/MitaBot-MD/issues"
 },
-"license": "GPL-3.0-or-later",
+"license": "MIT",
 "dependencies": {
 "@whiskeysockets/baileys": "^6.7.17",
 "@adiwajshing/keyed-db": "^0.2.4",
