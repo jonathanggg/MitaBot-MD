@@ -55,6 +55,5 @@ handler.help = ['ai3d <teks>'];
 handler.command = ['ai3d'];
 handler.tags = ['ai'];
 handler.limit = true;
-handler.register = true 
 
 export default handler;
