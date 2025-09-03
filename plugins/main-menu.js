@@ -6,9 +6,9 @@ const menuVideos = [
     'https://files.catbox.moe/lux4g2.mp4'
 ];
 const menuImages = [
-    'https://files.catbox.moe/uomr24.jpg',
-    'https://files.catbox.moe/7bx5ea.jpg',
-    'https://files.catbox.moe/7t871a.jpg'
+    'https://files.catbox.moe/fba87o.jpg',
+    'https://files.catbox.moe/u3itih.jpg',
+    'https://files.catbox.moe/j3ijr0.jpg'
 ];
 // --- --- --- --- --- --- --- --- --- --- -
 
@@ -36,14 +36,82 @@ let handler = async (m, { conn, args }) => {
     
 
     let txt = `
-¡Hola ${name}! 👋 Me llamo ${botname}.
+¡Hola ${name} Me llamo  ${botname} 
 
-Uptime: ${uptime}
-Usuarios Registrados: ${totalreg}
-Comandos Totales: ${totalCommands}
+╭━━ INFO - BOT ━ 
+┃Tiempo activo: ${uptime}
+┃Registros ${totalreg}
+┃Comandos ${totalCommands}
+┃✦ Canal: https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00
+╰━━━━━━━━━━━━━
 
-Aquí tienes el menú principal:
-*(Aquí iría el resto de tu texto del menú)*
+Quieres ser un sub bot?
+Utiliza *#qr* ó *#code*
+
+✰ Lista de comandos:
+
+╭─⬣「 ✰DESCARGAS✰ 」⬣
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#facebook + <url>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#play + <texto>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tiktok + <url>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#video + <texto>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#audiodoc
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#videodoc
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#ig  + <url>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#mediafire + <url>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#spotify + <url>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+│
+╰─⬣
+
+
+╭─⬣「 ✰BUSQUEDAS✰ 」⬣
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#pinterest + <texto>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tiktoksearch + <texto>
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tweetpost
+╰─⬣
+
+╭─⬣「 ✰CONFIGURACIÓN✰ 」⬣
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antibot 
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antidelete
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antilink
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antilink2
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antiprivado
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antispam
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antisubbots
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antitoxic
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antitrabas
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antiver
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autoaceptar
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autorechazar
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autoresponder
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autosticker
+╰─⬣
+
+╭─⬣「 ✰GRUPOS✰ 」⬣
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#promote
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setbye
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setwelcome
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setprimary
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+╰─⬣
+
+╭─⬣「 ✰TOOLS✰ 」⬣
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#s
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#qc
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#toimg
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#p
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#cbx
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#toghibli
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#imagedit
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
+╰─⬣
+
+> © Powered by Staff Mita Bot
 `.trim();
 let bot = global.db.data.settings[conn.user.jid]
     // --- Lógica para elegir aleatoriamente entre video/gif o imagen ---
@@ -66,7 +134,7 @@ let bot = global.db.data.settings[conn.user.jid]
             text: txt,
             contextInfo: {
                 mentionedJid: [m.sender, userId],
-                isForwarded: true, 
+                isForwarded: false, 
                forwardedNewsletterMessageInfo: { 
                    newsletterJid: channelRD.id,
                    newsletterName: channelRD.name,
