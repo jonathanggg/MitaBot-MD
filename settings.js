@@ -47,9 +47,9 @@ global.mitaJadibts = true
 global.packname = '⪛✰ MitaBot ✰⪜'
 global.botname = 'MitaBot-MD'
 global.wm = ''
-global.author = 'Made with JonathanG'
-global.dev = 'Made with JonathanG'
-global.textbot =  'Mitabot • Made With JonathanG'
+global.author = 'Made With By JonathanG'
+global.dev = 'Made With By JonathanG'
+global.textbot =  'Mitabot • Made With By JonathanG'
 global.etiqueta = 'JonathanG'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
