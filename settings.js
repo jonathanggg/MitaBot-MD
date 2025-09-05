@@ -16,19 +16,19 @@ global.botNumber = '' //Ejemplo: 573218138672
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.owner = [
-  ['50557333744', '🜲 JonathanG 🜲', true],
+  ['50584887870', '🜲 JonathanG 🜲', true],
   ['51901930696', 'Angelithoxz', true],
   [''],
   [''],
   ['']
 ];
-global.lidOwners = [['+128514011471987']] // Nota: esta configuracion es para que el bot reconozca a los owners en los grupos, si no quieres que el bot reconozca a los owners en los grupos, simplemente deja el array vacío: global.lidOwners = []
+global.lidOwners = [['']] // Nota: esta configuracion es para que el bot reconozca a los owners en los grupos, si no quieres que el bot reconozca a los owners en los grupos, simplemente deja el array vacío: global.lidOwners = []
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.mods = []
-global.suittag = ['50557333744']
-global.prems = ['50557333744']
+global.suittag = ['50584887870']
+global.prems = ['']
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
