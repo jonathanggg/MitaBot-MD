@@ -42,7 +42,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
     global.db.data.chats[m.chat].primaryBot = targetJid;
 
     return conn.sendMessage(m.chat, {
-        text: ` ${await tr(✐"Listo")}\n\nEl bot @${targetJid.split('@')[0]} ${await tr("ha sido establecido como primario en este grupo. Los demás bots no responderán aquí.")}`,
+        text: ` ${await tr(nEl bot @${targetJid.split('@')[0]} ${await tr("ha sido establecido como primario en este grupo. Los demás bots no responderán aquí.")}`,
         mentions: [targetJid]
     }, { quoted: m });
 };
