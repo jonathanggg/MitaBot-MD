@@ -1,10 +1,3 @@
-/*
-* Nama fitur : Mediafire Downloader
-* Sumber : https://whatsapp.com/channel/0029Vb6Zs8yEgGfRQWWWp639
-* Sumber skrep : https://whatsapp.com/channel/0029VbANq6v0VycMue9vPs3u/304
-* Author : ZenzzXD
-*/
-
 import axios from 'axios'
 import cheerio from 'cheerio'
 import { lookup } from 'mime-types'
@@ -13,11 +6,11 @@ async function mediafire(url) {
     try {
         if (!url.includes('www.mediafire.com')) throw new Error('Invalid url')
         
-        const { data } = await axios.get('https://api.nekorinn.my.id/tools/rynn-stuff-v2', {
+        const { data } = await axios.get('https://delirius-apiofc.vercel.app/download/mediafire', {
             params: {
                 method: 'GET',
                 url,
-                accessKey: '3ebcf782818cfa0b7265086f112ae25c0954afec762aa05a2eac66580c7cb353'
+                accessKey: ''
             }
         })
         
