@@ -24,6 +24,6 @@ conn.sendFile(m.chat, tes[0].thumbnail, 'yts.jpeg', teks, m)
 }
 handler.help = ['ytsearch']
 handler.tags = ['buscador']
-handler.command = ['ytbuscar', 'ytsearch', 'yts']
+handler.command = ['ytbuscar', 'ytsearch', 'yts', 'search']
 
 export default handler
