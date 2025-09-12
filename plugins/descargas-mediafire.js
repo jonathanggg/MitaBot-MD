@@ -1,65 +1,17 @@
-import axios from 'axios'
-import cheerio from 'cheerio'
-import { lookup } from 'mime-types'
+import fetch from 'node-fetch'
 
-async function mediafire(url) {
-    try {
-        if (!url.includes('www.mediafire.com')) throw new Error('Invalid url')
-        
-        const { data } = await axios.get('https://delirius-apiofc.vercel.app/download/mediafire', {
-            params: {
-                method: 'GET',
-                url,
-                accessKey: ''
-            }
-        })
-        
-        const $ = cheerio.load(data.result.response)
-        const raw = $('div.dl-info')
+let handler = async (m, { conn, text, usedPrefix, command }) => {
 
-        const filename = $('.dl-btn-label').attr('title') || raw.find('div.intro div.filename').text().trim() || null
-        const ext = filename.split('.').pop() || null
-        const mimetype = lookup(ext.toLowerCase()) || null
-
-        const filesize = raw.find('ul.details li:nth-child(1) span').text().trim()
-        const uploaded = raw.find('ul.details li:nth-child(2) span').text().trim()
-        const dl = $('a#downloadButton').attr('data-scrambled-url')
-        if (!dl) throw new Error('File not found')
-
-        return {
-            filename,
-            filesize,
-            mimetype,
-            uploaded,
-            download_url: atob(dl),
-            url
-        }
-    } catch (error) {
-        throw new Error(error.message)
-    }
+if (!text) throw m.reply(`${emoji} Por favor, ingresa un link de mediafire.`);
+conn.sendMessage(m.chat, { react: { text: "🕒", key: m.key } });
+        let ouh = await fetch(`https://delirius-apiofc.vercel.app/download/mediafire?url=${text}`)
+  let gyh = await ouh.json() 
+        await conn.sendFile(m.chat, gyh.data[0].link, `${gyh.data[0].nama}`, `乂  *¡MEDIAFIRE - DESCARGAS!*  乂\n\n✩ *Nombre* : ${gyh.data[0].nama}\n✩ *Peso* : ${gyh.data[0].size}\n✩ *MimeType* : ${gyh.data[0].mime}\n> ${dev}`, m)       
+        await conn.sendMessage(m.chat, { react: { text: '✅', key: m.key }})
 }
-
-const handler = async (m, { text }) => {
-    if (!text) return m.reply('Por favor proporciona un link de mediafire.')
-    try {
-        const res = await mediafire(text)
-
-        const caption = `*Mediafire Downloader*\n*Nombre:* ${res.filename}\n*Type :* ${res.mimetype}\n*Tamaño:* ${res.filesize}\n*Upload :* ${res.uploaded}`
-
-        await conn.sendMessage(m.chat, {
-            document: { url: res.download_url },
-            fileName: res.filename,
-            mimetype: res.mimetype,
-            caption,
-        }, { quoted: m })
-
-    } catch (e) {
-        m.reply(String(e))
-    }
-}
-
-handler.help = ['mediafire <link>']
-handler.tags = ['downloader']
-handler.command = ['mediafire', 'mf']
+handler.help = ['mediafire']
+handler.tags = ['descargas']
+handler.command = ['mf', 'mediafire']
+handler.group = true
 
 export default handler
