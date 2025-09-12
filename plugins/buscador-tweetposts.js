@@ -66,6 +66,5 @@ console.error(error)
 handler.help = ['tweetposts']
 handler.tags = ['buscador']
 handler.command = ['tweetposts']
-handler.coin = 1
 
 export default handler;
