@@ -109,6 +109,5 @@ let handler = async (m, { text, usedPrefix, command }) => {
 handler.help = ["wikipedia <búsqueda>", "wiki <búsqueda>"];
 handler.tags = ["buscador", "consultas"];
 handler.command = /^(wikipedia|wiki)$/i;
-handler.register = true;
 
 export default handler;
