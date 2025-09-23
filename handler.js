@@ -382,30 +382,3 @@ watchFile(file, async () => {
 unwatchFile(file)
 console.log(chalk.magenta("Se actualizo 'handler.js'"))
 })
-
-
-
-const msg = {
-rowner: `Comando disponible solo para el creador del bot.`, 
-owner: `Comando disponible solo para desarrolladores del bot.`, 
-mods: `Comamdo disponible solo para desarradores del bot.`, 
-premium: `Comando disponible solo para los usuarios premium.`, 
-group: `Comando disposable solo en grupos.`,
-private: `Comando disponible solo al chat privado del bot.`,
-admin: `Comando disponible solo para admins.`, 
-botAdmin: `Nesesito ser admin del grupo.`,
-unreg: `No estas registrado, registrate usando:\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`,
-restrict: `Esta caracteristica está desactivada.`
-}[type];
-if (msg) return m.reply(msg).then(_ => m.react('✖️'))}
-
-let file = global.__filename(import.meta.url, true)
-watchFile(file, async () => {
-unwatchFile(file)
-console.log(chalk.magenta("Se actualizo 'handler.js'"))
-
-if (global.conns && global.conns.length > 0 ) {
-const users = [...new Set([...global.conns.filter((conn) => conn.user && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED).map((conn) => conn)])];
-for (const userr of users) {
-userr.subreloadHandler(false)
-}}});
