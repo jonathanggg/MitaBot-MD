@@ -74,7 +74,9 @@ let handler = async (m, { conn, text, command }) => {
       `https://api.diioffc.web.id/api/download/ytmp3?url=${encodeURIComponent(videoUrl)}`,
       `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(videoUrl)}`,
       `https://api.bk9.dev/download/ytmp3?url=${encodeURIComponent(videoUrl)}&type=mp3`,
-      `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(videoUrl)}`
+      `https://apis.davidcyriltech.my.id/download/ytmp3?url=${encodeURIComponent(videoUrl)`,
+      `http://salya.alyabot.xyz:3108/download_audioV2?url=${encodeURIComponent(videoUrl)`,
+      `http://salya.alyabot.xyz:3108/download_audio?url=${encodeURIComponent(videoUrl)`
     ];
 
     let downloadData;
