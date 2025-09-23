@@ -1,9 +1,9 @@
 //Código creado por JonathanG, dejen creditos hdp >:v
 
 const menuVideos = [
-    'https://files.catbox.moe/lux4g2.mp4',
+    'https://files.catbox.moe/slo1l0.mp4',
     'https://files.catbox.moe/1upmwh.mp4',
-    'https://files.catbox.moe/lux4g2.mp4'
+    'https://files.catbox.moe/mci2sn.mp4'
 ];
 const menuImages = [
     'https://files.catbox.moe/fba87o.jpg',
