@@ -72,6 +72,7 @@ Utiliza *#qr* ó *#code*
 │⁖ฺ۟̇࣪·֗٬̤⃟⚡#pinterest + <texto>
 │⁖ฺ۟̇࣪·֗٬̤⃟⚡#tiktoksearch + <texto>
 │⁖ฺ۟̇࣪·֗٬̤⃟⚡#tweetpost
+│⁖ฺ۟̇࣪·֗٬̤⃟⚡#wikipedia <búsqueda>
 ╰─⬣
 
 ╭─⬣「 ✰CONFIGURACIÓN✰ 」⬣
