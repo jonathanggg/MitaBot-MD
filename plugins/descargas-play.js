@@ -84,7 +84,7 @@ let handler = async (m, { conn, text, command }) => {
         downloadData = await downloadFromApis(apis);
     } catch (e) {
         console.warn(e.message);
-        m.reply('🔹 Las APIs principales fallaron. Intentando con el servicio de respaldo (Cobalt)...');
+        m.reply('🔹 Las APIs principales fallaron. Intentando con el servicio de respaldo.');
         try {
             const postResponse = await axios.post('https://api.cobalt.tools/api/json', { url: videoUrl, isAudioOnly: true }, { timeout: 40000 });
             if (postResponse.data.status === 'success') {
