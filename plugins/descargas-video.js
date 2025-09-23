@@ -74,7 +74,7 @@ let handler = async (m, { conn, text, command }) => {
     const thumbnail = videoInfo.thumbnail;
     
     const apis = [
-        `https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(videoUrl)}`,
+        `http://salya.alyabot.xyz:3108/download_videoV2?url=${encodeURIComponent(videoUrl)}`,
         `https://api.diioffc.web.id/api/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
         `https://api.vreden.my.id/api/ytmp4?url=${encodeURIComponent(videoUrl)}`,
         `https://apis.davidcyriltech.my.id/download/ytmp4?url=${encodeURIComponent(videoUrl)}`,
