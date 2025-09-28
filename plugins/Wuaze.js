@@ -43,4 +43,13 @@ handler.help = ["wuaze"].map(v => v + " <responder a archivo>");
 handler.tags = ["uploader"];
 handler.command = /^wuaze$/i;
 
+export default handler;    console.error(e);
+    m.reply("❌ Hubo un error al subir el archivo.");
+  }
+};
+
+handler.help = ["wuaze"].map(v => v + " <responder a archivo>");
+handler.tags = ["uploader"];
+handler.command = /^wuaze$/i;
+
 export default handler;
