@@ -107,8 +107,8 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
   }
 }
 
-handler.help = handler.command = ['tofigure']
+handler.help = ['tofigure']
 handler.tags = ['ai']
-handler.limit = true
+handler.command = ['tofigure']
 
 export default handler
