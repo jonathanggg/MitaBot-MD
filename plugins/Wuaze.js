@@ -105,7 +105,6 @@ async function uploadToWuaze(buffer, mimetype) {
 
 handler.help = ['wuaze']
 handler.tags = ['transformador']
-handler.register = true
 handler.command = ['wuaze', 'wuazeup']
 
 export default handler
@@ -126,4 +125,4 @@ async function shortUrl(url) {
   } catch {
     return url // Si falla el acortador, devolver URL original
   }
-}
+  }
