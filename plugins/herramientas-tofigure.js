@@ -1,6 +1,4 @@
-// ToFigure 
-// API : https://api.nekolabs.my.id
-// Author : Hilman
+
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 
