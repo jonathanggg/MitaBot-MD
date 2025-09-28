@@ -1,4 +1,3 @@
-
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 
@@ -110,9 +109,6 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
 
 handler.help = handler.command = ['tofigure']
 handler.tags = ['ai']
-handler.limit = true
-
-export default handler = /^tofigure$/i
 handler.limit = true
 
 export default handler
