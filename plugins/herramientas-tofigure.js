@@ -8,7 +8,7 @@ async function uploadImageToCatbox(buffer) {
   form.append('reqtype', 'fileupload')
   form.append('fileToUpload', buffer, 'file.jpg')
 
-  const res = await fetch('https://catbox.moe/user/api.php', {
+  const res = await ('https://catbox.moe/user/api.php', {
     method: 'POST',
     body: form
   })
