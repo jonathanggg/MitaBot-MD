@@ -109,6 +109,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
 
 handler.help = ['tofigure']
 handler.tags = ['ai']
-handler.command = ['tofigure']
+handler.command = /^tofigure$/i
+handler.limit = true
 
 export default handler
