@@ -37,8 +37,9 @@ let handler = async (m) => {
     await conn.sendFile(m.chat, img, 'thumbnail.jpg', txt, m, fkontak, rcanal)
     await m.react(done)
     
-  } catch {
-    await m.react(error)
+  } catch (error) {
+    console.error('Error:', error)
+    await m.react('❌')
   }
 }
 
@@ -48,21 +49,24 @@ async function uploadWuaze(buffer, mimetype) {
   // Determinar extensión
   let ext = 'bin'
   if (mimetype.includes('jpeg')) ext = 'jpg'
-  else if (mimetype.includes('png')) ext = 'png'
+  else if (mimetype.includes('png')) ext = 'png' 
   else if (mimetype.includes('gif')) ext = 'gif'
   else if (mimetype.includes('mp4')) ext = 'mp4'
   else if (mimetype.includes('webp')) ext = 'webp'
   
   formData.append('file', buffer, `file.${ext}`)
-  formData.append('api_key', 'sk_Z49RUHfNJxSS0KqBo4y6xobpyyugDtfEndpoint')
   
   let res = await fetch('https://spacny.wuaze.com/api_upload.php', {
     method: 'POST',
+    headers: {
+      'X-API-Key': 'sk_Z49RUHfNJxSS0KqBo4y6xobpyyugDtfEndpoint'
+    },
     body: formData
   })
   
   let result = await res.json()
-  return result.url || result.file_url || result.link
+  // Según la documentación, la URL está en data.url
+  return result.data?.url || result.url || result.file_url
 }
 
 handler.help = ['wuaze']
@@ -71,15 +75,17 @@ handler.command = ['wuaze', 'wuazeup']
 export default handler
 
 function formatBytes(bytes) {
-  if (bytes === 0) {
-    return '0 B';
-  }
+  if (bytes === 0) return '0 B'
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`;
+  return `${(bytes / 1024 ** i).toFixed(2)} ${sizes[i]}`
 }
 
 async function shortUrl(url) {
-  let res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`)
-  return await res.text()
-                  }
+  try {
+    let res = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`)
+    return await res.text()
+  } catch {
+    return url
+  }
+    }
