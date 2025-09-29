@@ -32,7 +32,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
       if (!img) throw '❌ Error al descargar la imagen.'
       url = await uploadImageToCatbox(img)
     } else {
-      return m.reply(`Responde una imagen con el comando *${usedPrefix + command}*`)
+     // return m.reply(`Responde una imagen con el comando *${usedPrefix + command}*`)
     }
 
     const apiUrl = `https://api.nekolabs.my.id/ai/gemini/nano-banana?prompt=${encodeURIComponent(FIXED_PROMPT)}&imageUrl=${encodeURIComponent(url)}`
