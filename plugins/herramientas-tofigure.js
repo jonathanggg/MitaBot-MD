@@ -69,7 +69,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
   }
 }
 
-handler.help = ["tofigure"].map((a) => a + " reply image")
+handler.help = ["tofigure"]
 handler.tags = ["ai"]
 handler.command = /^(tofigure)$/i
 
