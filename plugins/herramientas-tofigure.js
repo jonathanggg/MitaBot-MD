@@ -72,8 +72,6 @@ let handler = async (m, { conn, usedPrefix, command }) => {
 handler.help = ["tofigure"].map((a) => a + " reply image")
 handler.tags = ["ai"]
 handler.command = /^(tofigure)$/i
-handler.register = true
-handler.premium = true
 
 export default handler
 
