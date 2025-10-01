@@ -11,7 +11,7 @@ let handler = async (m, { conn, usedPrefix, command }) => {
   if (!/image\//i.test(mime)) {
     return conn.sendMessage(
       m.chat,
-      { text: `Responde a una imagen con el comando *${usedPrefix + command}*` },
+     // { text: `Responde a una imagen con el comando *${usedPrefix + command}*` },
       { quoted: m }
     )
   }
