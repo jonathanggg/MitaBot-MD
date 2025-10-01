@@ -1,58 +1,88 @@
-import fetch from 'node-fetch'
-import FormData from 'form-data'
+import fs from "fs"
+import path from "path"
+import axios from "axios"
+import fetch from "node-fetch"
+import FormData from "form-data"
 
-const FIXED_PROMPT = `Create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. The content on the computer screen is the Zbrush modeling process of this figurine. Next to the computer screen is a BANDAI-style toy packaging box printed with the original artwork. The packaging features two-dimensional flat illustrations`
+let handler = async (m, { conn, usedPrefix, command }) => {
+  const q = m.quoted ? m.quoted : m
+  const mime = (q.msg || q).mimetype || ""
 
-async function uploadImageToCatbox(buffer) {
-  const form = new FormData()
-  form.append('reqtype', 'fileupload')
-  form.append('fileToUpload', buffer, 'file.jpg')
+  if (!/image\//i.test(mime)) {
+    return conn.sendMessage(
+      m.chat,
+      { text: `Responde a una imagen con el comando *${usedPrefix + command}*` },
+      { quoted: m }
+    )
+  }
 
-  const res = await fetch('https://catbox.moe/user/api.php', {
-    method: 'POST',
-    body: form
-  })
+  const reactStart = { react: { text: "⏳", key: m.key } }
+  const reactDone  = { react: { text: "✅", key: m.key } }
 
-  const url = await res.text()
-  if (!url.startsWith('http')) throw new Error('❌ error Al subir a catbox')
-  return url.trim()
-}
-
-let handler = async (m, { conn, usedPrefix, command, text }) => {
+  let tmpPath
   try {
-    let url
-    let q = m.quoted ? m.quoted : m
-    let mime = (q.msg || q).mimetype || ''
+    await conn.sendMessage(m.chat, reactStart)
 
-    if (/^https?:\/\//i.test(text)) {
-      url = text
-    } else if (mime && mime.startsWith('image/')) {
-      m.reply('Espera...')
-      let img = await q.download?.()
-      if (!img) throw '❌ Error al descargar la imagen.'
-      url = await uploadImageToCatbox(img)
-    } else {
-     // return m.reply(`Responde una imagen con el comando *${usedPrefix + command}*`)
-    }
+    if (!fs.existsSync("./tmp")) fs.mkdirSync("./tmp", { recursive: true })
 
-    const apiUrl = `https://api.nekolabs.my.id/ai/gemini/nano-banana?prompt=${encodeURIComponent(FIXED_PROMPT)}&imageUrl=${encodeURIComponent(url)}`
+    const media = await q.download()
+    if (!media || media.length === 0) throw new Error("Downloaded media kosong")
 
-    const resApi = await fetch(apiUrl)
-    if (!resApi.ok) throw '❌ Error al conectar con el servidor.'
-    const json = await resApi.json()
-    if (!json.status) throw '❌ Error al procesar imagen.'
+    const rawExt = (mime.split("/")[1] || "png").toLowerCase()
+    const ext = rawExt === "jpeg" ? "jpg" : rawExt
+    tmpPath = path.join("./tmp", `tofigure_${m.sender}.${ext}`)
+    fs.writeFileSync(tmpPath, media)
 
-    const hasil = json.result
-    await conn.sendFile(m.chat, hasil, 'tofigure.jpg', m)
+    const imageUrl = await uploadToUguu(tmpPath)
+    if (!imageUrl) throw new Error("Gagal upload gambar")
+
+    const { data } = await axios.get(
+      `https://api.deline.my.id/ai/figurine?url=${encodeURIComponent(imageUrl)}`,
+      { timeout: 180000 }
+    )
+    if (!data?.status) throw new Error(data?.error || "Gagal memproses figurine")
+
+    const outUrl = data?.result?.url
+    if (!outUrl) throw new Error("URL hasil tidak ditemukan")
+
+    const outImg = await axios.get(outUrl, { responseType: "arraybuffer", timeout: 120000 })
+    const buffer = Buffer.from(outImg.data)
+
+    await conn.sendMessage(
+      m.chat,
+      {
+        image: buffer,
+        caption: `*Aquí tienes*`,
+        mentions: [m.sender],
+      },
+      { quoted: m }
+    )
+
   } catch (e) {
-    console.error(e)
-    m.reply('❌ Error.')
+    const reason = e?.response?.data || e?.message || String(e)
+    await conn.sendMessage(m.chat, { text: `❌ Error:\n\n${reason}` }, { quoted: m })
+  } finally {
+    if (tmpPath && fs.existsSync(tmpPath)) {
+      try { fs.unlinkSync(tmpPath) } catch {}
+    }
+    await conn.sendMessage(m.chat, reactDone)
   }
 }
 
-handler.help = ['tofigure']
-handler.tags = ['ai']
-handler.command = /^tofigure$/i
-handler.limit = true
+handler.help = ["tofigure"].map((a) => a + " reply image")
+handler.tags = ["ai"]
+handler.command = /^(tofigure)$/i
+handler.register = true
+handler.premium = true
 
 export default handler
+
+async function uploadToUguu(filePath) {
+  const form = new FormData()
+  form.append('files[]', fs.createReadStream(filePath))
+  const res = await fetch('https://uguu.se/upload.php', { method: 'POST', body: form })
+  if (!res.ok) throw new Error(`Uguu upload failed: ${res.status}`)
+  const json = await res.json()
+  if (!json.files || !json.files[0] || !json.files[0].url) throw new Error('Respuesta invalida')
+  return json.files[0].url
+}
