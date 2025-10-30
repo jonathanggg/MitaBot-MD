@@ -1,9 +1,31 @@
 import yts from 'yt-search';
 import axios from 'axios';
 import crypto from 'crypto';
+import fs from 'fs';      
+import path from 'path';  
+
+// Definición del repositorio permitido
+const ALLOWED_REPO = 'https://github.com/jonathanggg/MitaBot-MD.git';
 
 let handler = async (m, { conn, text, command }) => {
-  if (!text) throw `${emoji} Ingresa el nombre del vídeo a descargar`;
+
+  try {
+    const pkgPath = path.join(process.cwd(), 'package.json');
+    if (!fs.existsSync(pkgPath)) {
+      console.log('Verificación fallida: No se encontró package.json.');
+      return; 
+    }
+    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+    if (pkg.repository?.url !== ALLOWED_REPO) {
+      console.log('Comando no disponible por el momento.');
+      return;
+    }
+  } catch (e) {
+    console.error('Error en la verificación de repositorio:', e);
+    return;
+  }
+
+  if (!text) throw `Ingresa el nombre del vídeo a descargar `;
 
   m.reply('*⏳ Buscando y procesando el video...*');
 
@@ -14,7 +36,6 @@ let handler = async (m, { conn, text, command }) => {
     const video = search.videos[0];
     const videoUrl = video.url;
 
-    // Usando el nuevo savetube para descargar
     const dl = await savetube.download(videoUrl, "video");
     if (!dl.status) {
         console.error("Error de Savetube:", dl);
@@ -36,15 +57,14 @@ let handler = async (m, { conn, text, command }) => {
 ${global.wm}
     `.trim();
 
-    // Lógica para enviar como documento o como video normal
-    if (command === 'videodoc') {
+    if (command === 'videodoc' || command === 'ytmp4') {
         await conn.sendMessage(m.chat, {
             document: { url: dl.result.download },
             mimetype: 'video/mp4',
             fileName: fileName,
             caption: caption
         }, { quoted: m });
-    } else {
+    } else { 
         await conn.sendMessage(m.chat, {
             video: { url: dl.result.download },
             mimetype: 'video/mp4',
@@ -59,7 +79,7 @@ ${global.wm}
   }
 };
 
-handler.help = ['video <título>', 'videodoc <título>'];
+handler.help = ['video <título>', 'mp4 <título>', 'videodoc <título>', 'ytmp4 <título>'];
 handler.tags = ['downloader'];
 handler.command = ['video', 'videodoc', 'mp4', 'ytmp4'];
 handler.limit = true;
@@ -148,7 +168,7 @@ const savetube = {
       });
       if (!videoInfo.status) return videoInfo;
       const decrypted = await savetube.crypto.decrypt(videoInfo.data.data);
-      const downloadData = await savetube.request(`https://${cdn}${savetube.api.download}`, {
+      const downloadData = await savetube.request(`https://` + cdn + savetube.api.download, {
         id,
         downloadType: type === "audio" ? "audio" : "video",
         quality: type === "audio" ? "128" : "720", // Calidad de video a 720
