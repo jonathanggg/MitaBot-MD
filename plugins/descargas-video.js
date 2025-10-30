@@ -3,7 +3,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 
 let handler = async (m, { conn, text, command }) => {
-  if (!text) throw `${emoji} Ingresa el link del vídeo a descargar`;
+  if (!text) throw `${emoji} Ingresa el nombre del vídeo a descargar`;
 
   m.reply('*⏳ Buscando y procesando el video...*');
 
