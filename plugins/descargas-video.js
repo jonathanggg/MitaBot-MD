@@ -4,7 +4,6 @@ import crypto from 'crypto';
 import fs from 'fs';      
 import path from 'path';  
 
-// Definición del repositorio permitido
 const ALLOWED_REPO = 'https://github.com/jonathanggg/MitaBot-MD.git';
 
 let handler = async (m, { conn, text, command }) => {
