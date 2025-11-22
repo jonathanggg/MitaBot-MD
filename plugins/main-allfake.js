@@ -30,17 +30,17 @@ console.log(`Error : ${e}`)
 //creador y otros
 global.creador = 'Wa.me/50557333744'
 global.ofcbot = `${conn.user.jid.split('@')[0]}`
-global.asistencia = 'Wa.me/50557333744'
-global.namechannel = 'ᰔᩚ MitaBot :D ❀'
-global.namechannel2 = 'ᰔᩚ Novedades sobre Mita❀'
-global.namegrupo = 'MitaBot MD'
-global.namecomu = 'ᰔᩚ 𝙳𝚝𝚘𝚍𝟷𝙿𝚘𝚌𝚘 • ᥴ᥆mᥙᥒі𝗍ᥡ ❀'
-global.listo = '*Aquí tienes*'
+global.asistencia = 'Wa.me/50584887870'
+global.namechannel = ' MitaBot :D '
+global.namechannel2 = '☁︎ Novedades sobre Mita 🌷'
+global.namegrupo = '😍 MitaBot MD 😍'
+global.namecomu = ' 𝙳𝚝𝚘𝚍𝟷𝙿𝚘𝚌𝚘 • ᥴ᥆mᥙᥒі𝗍ᥡ '
+global.listo = '*listo 😘*'
 global.fotoperfil = await conn.profilePictureUrl(m.sender, 'image').catch(_ => 'https://files.catbox.moe/xr2m6u.jpg')
 
 //Ids channel
 global.canalIdM = ["120363417289452573@newsletter", "120363368618055639@newsletter"]
-global.canalNombreM = ["MitaBot-MD", "ᰔᩚ Novedades Sobre Mis Bots :D❀"]
+global.canalNombreM = ["MitaBot-MD🙃", " Novedades Sobre Mis Bots🔥"]
 global.channelRD = await getRandomChannel()
 
 //fechas
@@ -67,10 +67,10 @@ global.emoji5 = '✰'
 global.emojis = [emoji, emoji2, emoji3, emoji4].getRandom()
 
 //mensaje en espera
-global.wait = '❍ Espera un momento, soy lento...';
-global.waitt = '❍ Espera un momento, soy lento...';
-global.waittt = '❍ Espera un momento, soy lento...';
-global.waitttt = '❍ Espera un momento, soy lento...';
+global.wait = '❍ Espera un momento.';
+global.waitt = '❍ Espera un momento.';
+global.waittt = '❍ Espera un momento.';
+global.waitttt = '❍ Espera un momento.';
 
 //Enlaces
 var canal = 'https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00'  
@@ -101,7 +101,7 @@ global.taguser = '@' + m.sender.split("@s.whatsapp.net")
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
-global.packsticker = `┊🐋Kenny🧠NinoNakano\n↳https://nexus.club/\n┊👹Info:\n↳https://nexus.club/discord \n ✦ Fecha: ${fecha}\nⴵ Hora: ${tiempo}`;
+global.packsticker = `┊🐋Kenny🧠Mita\n↳https://mancosyasociados.wuaze.com/\n┊👹Info:\n↳https://mancosyasociados.wuaze.com/grupo \n ✦ Fecha: ${fecha}\nⴵ Hora: ${tiempo}`;
 global.packsticker2 = `\n👑Bot: @${botname}\n👑Usuario: @${nombre}\n\n${dev}`
 
   
