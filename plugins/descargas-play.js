@@ -1,113 +1,287 @@
-import yts from 'yt-search';
-import axios from 'axios';
-import crypto from 'crypto';
-import fs from 'fs';      
-import path from 'path'; 
+import yts from 'yt-search'
+import axios from 'axios'
+import crypto from 'crypto'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+import fs from 'fs'
+import path from 'path'
+import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from '@whiskeysockets/baileys'
 
-const ALLOWED_REPO = 'https://github.com/jonathanggg/MitaBot-MD.git';
+const execPromise = promisify(exec)
 
-let handler = async (m, { conn, text, command }) => {
-  
-  try {
-    const pkgPath = path.join(process.cwd(), 'package.json');
-    if (!fs.existsSync(pkgPath)) {
-      console.log('Verificación fallida: No se encontró package.json.');
-      return; 
-    }
-    const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-    if (pkg.repository?.url !== ALLOWED_REPO) {
-      console.log('Comando no disponible por el momento.');
-      return;
-    }
-  } catch (e) {
-    console.error('Error:', e);
-    return; 
-  }
+let handler = async (m, { conn, text, command, usedPrefix }) => {
+  if (!text) return m.reply(`✳️ Ingresa el nombre del audio o video.\nEjemplo: *${usedPrefix + command} Bad Bunny*`)
 
-  if (!text) throw `Ingresa el nombre del vídeo a descargar `;
-
-  m.reply('*⏳ Buscando y procesando el audio...*');
+  await m.reply('*🔍 Buscando contenido...*')
 
   try {
-    const search = await yts(text);
-    if (!search.videos.length) throw 'Canción no encontrada, ¡intenta con otro título!';
-    
-    const video = search.videos[0];
-    const videoUrl = video.url;
+    const search = await yts(text)
+    if (!search.videos.length) throw new Error('No se encontró el video, intenta con otro título.')
 
-    const dl = await savetube.download(videoUrl, "audio");
-    if (!dl.status) {
-        console.error("Error de Savetube:", dl);
-        throw new Error(dl.error || 'No se pudo obtener el enlace de descarga.');
-    }
+    const video = search.videos[0]
+    const videoUrl = video.url
 
-    const { title, thumbnail, duration } = dl.result;
-    const fileName = `${sanitizeFilename(title)}.mp3`;
+    // Guardar la URL temporalmente en la base de datos del usuario
+    global.db.data.users[m.sender] = global.db.data.users[m.sender] || {}
+    global.db.data.users[m.sender].lastVideo = videoUrl
+    global.db.data.users[m.sender].lastVideoTime = Date.now()
 
-    if (command === 'audiodoc') { 
-      const caption = `乂 *YT - AUDIO (DOC)*\n\n  ⭔ *Título*: ${title}\n  ⭔ *Duración*: ${duration || video.timestamp}`;
-      await conn.sendMessage(m.chat, {
-        document: { url: dl.result.download },
-        mimetype: 'audio/mpeg',
-        fileName: fileName,
-        caption: caption
-      }, { quoted: m });
+    // Preparar la imagen para el mensaje interactivo
+    const pp = await prepareWAMessageMedia(
+      { image: { url: video.thumbnail } },
+      { upload: conn.waUploadToServer }
+    )
 
-    } else {
-      const caption = `
-乂  *Y T - P L AY*
+    // Definir el texto del mensaje
+    const caption = `
+*🎵 Título:* ${video.title}
+*👤 Canal:* ${video.author.name}
+*⏱️ Duración:* ${video.timestamp}
+*👁️ Vistas:* ${video.views.toLocaleString()}
+*📅 Publicado:* ${video.ago}
 
-   ⭔  *Título* : ${title}
-   ⭔  *Canal* : ${video.author.name}
-   ⭔  *Duración* : ${duration || video.timestamp}
-   ⭔  *Vistas* : ${video.views.toLocaleString()}
-   ⭔  *Publicado* : ${video.ago}
+👇 *Selecciona una opción abajo:*
+    `.trim()
 
-${global.wm}
-    `.trim();
+    // Crear los botones interactivos
+    const buttons = [
+      {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: "🎵 Audio MP3",
+          id: "1"
+        })
+      },
+      {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: "🎬 Video MP4",
+          id: "2"
+        })
+      },
+      {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: "📄 Audio Doc",
+          id: "3"
+        })
+      },
+      {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: "📁 Video Doc",
+          id: "4"
+        })
+      },
+      {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: "🎙️ Nota de Voz",
+          id: "5"
+        })
+      }
+    ]
 
-      await conn.sendMessage(m.chat, {
-        image: { url: thumbnail },
-        caption,
-        contextInfo: {
-          externalAdReply: {
-            title: title,
-            body: 'Audio encontrado con éxito',
-            thumbnailUrl: thumbnail,
-            sourceUrl: videoUrl,
-            mediaType: 1,
-            showAdAttribution: false
-          }
+    // Generar el mensaje interactivo
+    const msg = generateWAMessageFromContent(m.chat, {
+      viewOnceMessage: {
+        message: {
+          messageContextInfo: {
+            deviceListMetadata: {},
+            deviceListMetadataVersion: 2
+          },
+          interactiveMessage: proto.Message.InteractiveMessage.create({
+            body: proto.Message.InteractiveMessage.Body.create({
+              text: caption
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.create({
+              text: global?.wm || 'YouTube Downloader'
+            }),
+            header: proto.Message.InteractiveMessage.Header.create({
+              hasMediaAttachment: true,
+              ...pp
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
+              buttons: buttons
+            })
+          })
         }
-      }, { quoted: m });
+      }
+    }, { quoted: m })
 
-      await conn.sendMessage(m.chat, {
-        audio: { url: dl.result.download },
-        mimetype: 'audio/mpeg',
-        ptt: false,
-        fileName: fileName
-      }, { quoted: m });
-    }
+    // Enviar el mensaje
+    await conn.relayMessage(m.chat, msg.message, {})
 
   } catch (e) {
-    console.error(e);
-    m.reply(`❌ Ocurrió un error. Por favor, inténtalo de nuevo.\n*Error:* ${e.message}`);
+    console.error('Error en búsqueda:', e)
+    await m.reply(`❌ Ocurrió un error.\n*Detalles:* ${e.message}`)
   }
-};
-
-handler.help = ['play <título>', 'audiodoc <título>']; 
-handler.tags = ['downloader'];
-handler.command = ['play', 'audiodoc'];
-handler.limit = true;
-handler.daftar = true;
-
-export default handler;
-
-function sanitizeFilename(name = 'audio') {
-  return name.replace(/[\\/:*?"<>|]+/g, '').trim().slice(0, 150);
 }
 
-// ===== CÓDIGO SAVETUBE =====
+handler.help = ['play <título>', 'ytmp3 <título>']
+handler.tags = ['downloader']
+handler.command = ['play', 'ytmp3']
+handler.limit = true
+handler.daftar = true
+
+export default handler
+
+handler.before = async function (m, { conn }) {
+  if (!m.text) return
+  
+  // Verificar si el usuario tiene una búsqueda pendiente
+  const user = global.db.data.users[m.sender]
+  if (!user || !user.lastVideo) return
+  
+  const text = m.text.trim()
+  
+  // Validar que la respuesta sea 1, 2, 3, 4 o 5 (o que venga del botón)
+  if (!['1', '2', '3', '4', '5'].includes(text)) return
+  
+  // Verificar tiempo de expiración (5 minutos)
+  const TIMEOUT = 5 * 60 * 1000
+  const elapsedTime = Date.now() - (user.lastVideoTime || 0)
+  
+  if (elapsedTime > TIMEOUT) {
+    delete user.lastVideo
+    delete user.lastVideoTime
+    return m.reply('⏱️ El tiempo para descargar este video ha expirado. Busca de nuevo.')
+  }
+  
+  const url = user.lastVideo
+  // Importante: Borramos la variable para evitar descargas dobles accidentales
+  delete user.lastVideo
+  delete user.lastVideoTime
+  
+  // --- Opción 1: Audio MP3 ---
+  if (text === '1') {
+    await m.reply('*🎧 Descargando audio...*')
+    try {
+      const dl = await savetube.download(url, 'audio')
+      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      
+      await conn.sendMessage(m.chat, {
+          audio: { url: dl.result.download },
+          mimetype: 'audio/mpeg',
+          fileName: `${sanitizeFilename(dl.result.title)}.mp3`,
+        }, { quoted: m })
+    } catch (e) {
+      console.error(e)
+      await m.reply(`❌ Error: ${e.message}`)
+    }
+    return true
+  }
+  
+  // --- Opción 2: Video MP4 ---
+  if (text === '2') {
+    await m.reply('*🎬 Descargando video...*')
+    try {
+      const dl = await savetube.download(url, 'video')
+      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      
+      await conn.sendMessage(m.chat, {
+          video: { url: dl.result.download },
+          mimetype: 'video/mp4',
+          fileName: `${sanitizeFilename(dl.result.title)}.mp4`,
+          caption: `🎬 *${dl.result.title}*`
+        }, { quoted: m })
+    } catch (e) {
+      console.error(e)
+      await m.reply(`❌ Error: ${e.message}`)
+    }
+    return true
+  }
+  
+  // --- Opción 3: Audio Documento ---
+  if (text === '3') {
+    await m.reply('*📄 Descargando documento de audio...*')
+    try {
+      const dl = await savetube.download(url, 'audio')
+      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      
+      await conn.sendMessage(m.chat, {
+          document: { url: dl.result.download },
+          mimetype: 'audio/mpeg',
+          fileName: `${sanitizeFilename(dl.result.title)}.mp3`,
+          caption: `📄 ${dl.result.title}`
+        }, { quoted: m })
+    } catch (e) {
+      console.error(e)
+      await m.reply(`❌ Error: ${e.message}`)
+    }
+    return true
+  }
+  
+  // --- Opción 4: Video Documento ---
+  if (text === '4') {
+    await m.reply('*📁 Descargando documento de video...*')
+    try {
+      const dl = await savetube.download(url, 'video')
+      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      
+      await conn.sendMessage(m.chat, {
+          document: { url: dl.result.download },
+          mimetype: 'video/mp4',
+          fileName: `${sanitizeFilename(dl.result.title)}.mp4`,
+          caption: `📁 ${dl.result.title}`
+        }, { quoted: m })
+    } catch (e) {
+      console.error(e)
+      await m.reply(`❌ Error: ${e.message}`)
+    }
+    return true
+  }
+  
+  // --- Opción 5: Nota de Voz (Con FFmpeg) ---
+  if (text === '5') {
+    await m.reply('*🎙️ Procesando nota de voz...*')
+    try {
+      const dl = await savetube.download(url, 'audio')
+      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      
+      const response = await axios.get(dl.result.download, { responseType: 'arraybuffer' })
+      const tempDir = path.join(process.cwd(), 'tmp')
+      if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir)
+      
+      const inputFile = path.join(tempDir, `${Date.now()}_in.mp3`)
+      const outputFile = path.join(tempDir, `${Date.now()}_out.opus`)
+      
+      fs.writeFileSync(inputFile, response.data)
+      
+      try {
+        // Convertir a OPUS para que sea nota de voz real
+        await execPromise(`ffmpeg -i "${inputFile}" -c:a libopus -b:a 128k -vbr on -compression_level 10 "${outputFile}"`)
+        
+        await conn.sendMessage(m.chat, {
+            audio: fs.readFileSync(outputFile),
+            mimetype: 'audio/ogg; codecs=opus',
+            ptt: true 
+          }, { quoted: m })
+          
+        fs.unlinkSync(inputFile)
+        fs.unlinkSync(outputFile)
+      } catch (err) {
+        // Fallback si no hay ffmpeg
+        await conn.sendMessage(m.chat, {
+            audio: { url: dl.result.download },
+            mimetype: 'audio/mp4',
+            ptt: true 
+          }, { quoted: m })
+        if (fs.existsSync(inputFile)) fs.unlinkSync(inputFile)
+      }
+    } catch (e) {
+      console.error(e)
+      await m.reply(`❌ Error: ${e.message}`)
+    }
+    return true
+  }
+}
+
+function sanitizeFilename(name = 'archivo') {
+  return name.replace(/[\\/:*?"<>|]+/g, '').trim().slice(0, 100)
+}
+
+// ======== API SAVETUBE ========
 const savetube = {
   api: {
     base: "https://media.savetube.me/api",
@@ -120,7 +294,7 @@ const savetube = {
     "content-type": "application/json",
     origin: "https://yt.savetube.me",
     referer: "https://yt.savetube.me/",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " + "(KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36",
   },
   crypto: {
     hexToBuffer: (hexString) => Buffer.from(hexString.match(/.{1,2}/g).join(""), "hex"),
@@ -174,7 +348,7 @@ const savetube = {
   download: async (link, type = "audio") => {
     if (!savetube.isUrl(link)) return { status: false, code: 400, error: "URL inválida" };
     const id = savetube.youtube(link);
-    if (!id) return { status: false, code: 400, error: "No se pudo obtener ID del video" };
+    if (!id) return { status: false, code: 400, error: "No se pudo obtener ID" };
     try {
       const cdnx = await savetube.getCDN();
       if (!cdnx.status) return cdnx;
@@ -187,19 +361,17 @@ const savetube = {
       const downloadData = await savetube.request(`https://${cdn}${savetube.api.download}`, {
         id,
         downloadType: type === "audio" ? "audio" : "video",
-        quality: type === "audio" ? "128" : "720", // Calidad de video a 720
+        quality: type === "audio" ? "128" : "720",
         key: decrypted.key,
       });
       if (!downloadData.data.data?.downloadUrl)
-        return { status: false, code: 500, error: "No se pudo obtener link de descarga" };
+        return { status: false, code: 500, error: "No se encontró enlace de descarga" };
       return {
         status: true,
         code: 200,
         result: {
-          title: decrypted.title || "Desconocido",
-          format: type === "audio" ? "mp3" : "mp4",
+          title: decrypted.title || "YouTube Media",
           download: downloadData.data.data.downloadUrl,
-          thumbnail: decrypted.thumbnail || `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
           duration: decrypted.duration,
         },
       };
