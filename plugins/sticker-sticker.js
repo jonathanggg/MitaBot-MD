@@ -15,7 +15,7 @@ let handler = async (m, { conn, args, usedPrefix, command }) => {
       let img = await q.download?.();
 
       if (!img) {
-        return conn.reply(m.chat, `${emoji} Por favor, envía una imagen o video para hacer un sticker.`, m);
+        return conn.reply(m.chat, `${emoji} Por favor, envía una imagen/video para hacer un sticker.`, m);
       }
 
       let out;
