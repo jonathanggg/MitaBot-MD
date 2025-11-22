@@ -1,10 +1,8 @@
-
 import ws from 'ws';
-
-// (Opcional, si usas traducción, si no, puedes quitar la línea de abajo y los 'await tr(...)')
 import { tr } from '../lib/_checkLang.js';
 
 let handler = async (m, { conn, usedPrefix, args }) => {
+    
     const input = args[0]?.trim();
     if (!input) {
         return m.reply(await tr(`Debes etiquetar o escribir el número de un BOT conectado para establecerlo como primario.\nEjemplo: ${usedPrefix}setprimary @521...`));
@@ -24,7 +22,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
     if (!targetNumber) {
         return m.reply(await tr('El número/mención proporcionado no es válido. Asegúrate de etiquetar a un bot conectado.'));
     }
-
+    
     targetJid = activeBotJids.find(jid => jid.startsWith(targetNumber + '@'));
 
     if (!targetJid) {
@@ -34,7 +32,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
         
         return conn.sendMessage(m.chat, { text: msg, mentions: activeBotJids }, { quoted: m });
     }
-
+    
     let chat = global.db.data.chats[m.chat];
     if (!chat) {
         global.db.data.chats[m.chat] = {};
@@ -42,7 +40,7 @@ let handler = async (m, { conn, usedPrefix, args }) => {
     global.db.data.chats[m.chat].primaryBot = targetJid;
 
     return conn.sendMessage(m.chat, {
-        text: ` ${await tr(nEl bot @${targetJid.split('@')[0]} ${await tr("ha sido establecido como primario en este grupo. Los demás bots no responderán aquí.")}`,
+        text: `✅ ${await tr("¡Éxito!")}\n\nEl bot @${targetJid.split('@')[0]} ${await tr("ha sido establecido como primario en este grupo. Los demás bots no responderán aquí.")}`,
         mentions: [targetJid]
     }, { quoted: m });
 };
