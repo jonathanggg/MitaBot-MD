@@ -22,9 +22,6 @@ global.owner = [
   [''],
   ['']
 ];
-global.lidOwners = [['']] // Nota: esta configuracion es para que el bot reconozca a los owners en los grupos, si no quieres que el bot reconozca a los owners en los grupos, simplemente deja el array vacío: global.lidOwners = []
-
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
 global.mods = []
 global.suittag = ['50584887870']
@@ -32,9 +29,6 @@ global.prems = ['']
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.libreria = 'Baileys'
-global.baileys = 'V 6.7.17' 
-global.languaje = 'Español'
 global.vs = '1.0.0'
 global.nameqr = 'MitaBot-MD'
 global.namebot = 'MitaBot'
@@ -62,21 +56,7 @@ global.avatar = 'https://tinyurl.com/258ghupn'
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
-global.gp1 = 'https://chat.whatsapp.com/JnJrquajsdqINd2qE1pV8r?mode=r_c'
-global.comunidad1 = 'https://chat.whatsapp.com/DFM4O5znWumLXnVwEWU3qZ'
-global.channel = 'https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00'
-global.channel2 = 'https://whatsapp.com/channel/0029VawknnCKQuJKpYEYq500'
-global.md = 'https://github.com/jonathanggg/MitaBot-MD'
-global.correo = 'jg4824261@gmail.com'
 global.cn ='https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00';
-
-//*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
-
-global.catalogo = fs.readFileSync('./src/catalogo.jpg');
-global.estilo = { key: {  fromMe: false, participant: `0@s.whatsapp.net`, ...(false ? { remoteJid: "5219992095479-1625305606@g.us" } : {}) }, message: { orderMessage: { itemCount : -999999, status: 1, surface : 1, message: packname, orderTitle: 'Bang', thumbnail: catalogo, sellerJid: '0@s.whatsapp.net'}}}
-global.ch = {
-ch1: 'newsletter id',
-}
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
@@ -86,60 +66,6 @@ global.fetch = fetch
 global.axios = axios
 global.moment = moment   
 
-global.rpg = {
-  emoticon(string) {
-    string = string.toLowerCase();
-    const emot = {
-      level: '🌟 Nivel',
-      coin: '💸 Coin',
-      exp: '✨ Experiencia',
-      bank: '🏦 Banco',
-      diamond: '💎 Diamante',
-      health: '❤️ Salud',
-      kyubi: '🌀 Magia',
-      joincount: '💰 Token',
-      emerald: '♦️ Esmeralda',
-      stamina: '⚡ Energía',
-      role: '⚜️ Rango',
-      premium: '🎟️ Premium',
-      pointxp: '📧 Puntos Exp',
-      gold: '👑 Oro',
-      iron: '⛓️ Hierro',
-      coal: '🌑 Carbón',
-      stone: '🪨 Piedra',
-      potion: '🥤 Poción',
-    };
-    const results = Object.keys(emot).map((v) => [v, new RegExp(v, 'gi')]).filter((v) => v[1].test(string));
-    if (!results.length) return '';
-    else return emot[results[0][0]];
-  }};
-global.rpgg = { 
-  emoticon(string) {
-    string = string.toLowerCase();
-    const emott = {
-      level: '🌟',
-      coin: '💸',
-      exp: '✨',
-      bank: '🏦',
-      diamond: '💎',
-      health: '❤️',
-      kyubi: '🌀',
-      joincount: '💰',
-      emerald: '♦️',
-      stamina: '⚡',
-      role: '⚜️',
-      premium: '🎟️',
-      pointxp: '📧',
-      gold: '👑',
-      iron: '⛓️',
-      coal: '🌑',
-      stone: '🪨',
-      potion: '🥤',
-    };
-    const results = Object.keys(emott).map((v) => [v, new RegExp(v, 'gi')]).filter((v) => v[1].test(string));
-    if (!results.length) return '';
-    else return emott[results[0][0]];
-  }};  
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
 
