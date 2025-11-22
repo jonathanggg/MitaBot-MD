@@ -1,5 +1,5 @@
-import fetch from 'node-fetch'
-import { uploadPomf } from '../lib/uploadImage.js'
+/*import fetch from 'node-fetch'
+import uploadlmagefrom '../lib/uploadImage.js'
 
 let handler = async (m, { conn, usedPrefix, text }) => {
     try {
@@ -39,3 +39,4 @@ handler.command = ['removebg'];
 handler.limit = 3
 
 export default handler
+*/
