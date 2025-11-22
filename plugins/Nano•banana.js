@@ -178,4 +178,4 @@ handler.help = ['nano', 'banana'];
 handler.tags = ['ai'];
 handler.command = /^(nano|banana)$/i;
 
-module.exports = handler;
+export default handler;
