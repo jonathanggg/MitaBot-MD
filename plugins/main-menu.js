@@ -7,9 +7,11 @@ const menuVideos = [
     'https://files.catbox.moe/n1rtnl.mp4'
 ];
 const menuImages = [
-    'https://files.catbox.moe/fba87o.jpg',
-    'https://files.catbox.moe/u3itih.jpg',
-    'https://files.catbox.moe/j3ijr0.jpg'
+    'https://files.catbox.moe/ofzm16.jpg',
+    'https://files.catbox.moe/5t7tnh.jpg',
+    'https://files.catbox.moe/37z59v.jpg',
+    'https://files.catbox.moe/rj89tz.jpg'
+    'https://files.catbox.moe/mud62o.jpg'
 ];
 // --- --- --- --- --- --- --- --- --- --- -
 
@@ -120,7 +122,7 @@ Utiliza *#qr* ó *#code*
 `.trim();
 let bot = global.db.data.settings[conn.user.jid]
     // --- Lógica para elegir aleatoriamente entre video/gif o imagen ---
-    const useVideo = Math.random() < 0.4; // 40% de probabilidad de usar video/gif
+    const useVideo = Math.random() < 0.5; // 50% de probabilidad de usar video/gif
     let messageOptions = {};
     let selectedMediaUrl;
 
