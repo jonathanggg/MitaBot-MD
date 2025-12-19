@@ -31,7 +31,7 @@
 },
 "license": "MIT",
 "dependencies": {
-"@whiskeysockets/baileys": "github:jonathanggg/KennyBaileys",
+"@whiskeysockets/baileys": "github:WhiskeySockets/Baileys",
 "@adiwajshing/keyed-db": "^0.2.4",
 "@bochilteam/scraper": "^4.2.4",
 "@bochilteam/scraper-sosmed": "^1.0.5",
