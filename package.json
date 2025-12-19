@@ -51,6 +51,7 @@
     "url-regex-safe": "^3.0.0",
     "ws": "^8.18.3",
     "yargs": "^17.3.1",
+    "moment-timezone": "^0.5.37",
     "yt-search": "^2.10.3"
   },
   "overrides": {
