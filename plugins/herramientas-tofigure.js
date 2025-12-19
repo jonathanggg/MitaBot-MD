@@ -1,6 +1,6 @@
-const fs = require('fs');
-const axios = require('axios');
-const FormData = require('form-data');
+const fs = require'fs';
+const axios = require'axios';
+const FormData = require'form-data';
 
 /**
  * @param {string} filePath
@@ -25,17 +25,17 @@ const allEndpoints = {
     '1': {
         url: 'https://api-faa.my.id/faa/tofigura?url=',
         name: 'Figura Style V1',
-        description: 'Efek figura versi 1 - Classic Style'
+        description: 'Figura efecto versión 1 - Estilo clásico'
     },
     '2': {
         url: 'https://api-faa.my.id/faa/tofigurav2?url=',
         name: 'Figura Style V2',
-        description: 'Efek figura versi 2 - Enhanced Style'
+        description: 'Efectos de figura versión 2 - Estilo mejorado'
     },
     '3': {
         url: 'https://api-faa.my.id/faa/tofigurav3?url=',
         name: 'Figura Style V3',
-        description: 'Efek figura versi 3 - Premium Style'
+        description: 'Figura efecto versión 3 - Estilo Premium'
     }
 };
 
@@ -44,7 +44,7 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
     let mime = (q.msg || q).mimetype || q.mediaType || '';
 
     if (!/image\/(jpeg|jpg|png)/i.test(mime)) {
-        return m.reply(`Responde la imagen con el comando: *#${usedPrefix + command}*`);
+        return m.reply(`Responde una imagen con el comando: *#${usedPrefix + command}*`);
     }
 
     await m.react('⏳');
@@ -89,4 +89,4 @@ handler.help = ['tofigure (reply foto) [1-3]'];
 handler.tags = ['ai'];
 handler.limit = true;
 
-module.exports = handler;
+export default handler;
