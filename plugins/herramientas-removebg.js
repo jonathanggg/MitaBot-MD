@@ -1,42 +1,72 @@
-/*import fetch from 'node-fetch'
-import uploadlmagefrom '../lib/uploadImage.js'
 
-let handler = async (m, { conn, usedPrefix, text }) => {
-    try {
-        let args = text.trim().split(/\s+/);
-        let upscale = (args[1] && args[1].toLowerCase() === 'hd') ? "true" : "false";
+import axios from 'axios';
+import FormData from 'form-data';
+import fs from 'fs';
 
-        let q = m.quoted ? m.quoted : m;
-        let mime = (q.msg || q).mimetype || '';
-        if (!mime || !mime.startsWith('image/')) throw `Responde a una imagen con el comando ${usedPrefix}removebg`;
+let handler = async (m, { conn, usedPrefix, command }) => {
+    let q = m.quoted ? m.quoted : m;
+    let mime = (q.msg || q).mimetype || "";
 
-        m.reply(wait);
-
-        let media = await q.download();
-        let url = await uploadPomf(media);
-
-        let apiUrl = `https://api.ryzumi.vip/api/ai/v2/removebg?url=${url}&upscale=${upscale}`;
-        let response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Error al obtener datos de la api');
-
-    let hasil = Buffer.from(await response.arrayBuffer());
-
-        await conn.sendFile( m.chat, hasil, 'removedbg.jpg', global.wm, m );
-
-        let epoch = Date.now();
-        let random = Math.floor(Math.random() * 99999);
-        let filename = `removedbg_${random}_${epoch}_file.png`;
-
-        await conn.sendFile( m.chat, hasil, filename, '', m, null, { mimetype: 'image/png', asDocument: true } );
-    } catch (error) {
-        m.reply(`Error: ${error.message}`);
+    if (!/image/.test(mime) && mime !== "image/webp") {
+        return m.reply(`Reponde a una imagen von el comando: *#${usedPrefix + command}*`);
     }
+
+    if (mime === "image/webp") {
+        if (q.isAnimated) return m.reply("❌ Los stickers GIF no se pueden eliminar del fondo.");
+    }
+
+    await conn.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
+
+    let media = await q.download();
+    let result = await removeBg(media);
+
+    if (!result?.data?.cutoutUrl) {
+        await conn.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+        return m.reply("No se pudieron recuperar los resultados de la eliminación del fondo!");
+    }
+
+    let buffer = await conn.getFile(result.data.cutoutUrl).then(a => a.data);
+
+    await conn.sendMessage(m.chat, { react: { text: "✔️", key: m.key } });
+
+    conn.sendFile(m.chat, buffer, 'removebg.png', '✔️ Fondo removido exitosamente !', m);
 };
 
-handler.help = ['removebg'];
-handler.tags = ['ai'];
-handler.command = ['removebg'];
-handler.limit = 3
+handler.help = ['removebg', 'rmbg'];
+handler.tags = ['tools'];
+handler.command = ['removebg', 'rmbg']
+handler.limit = true;
+export default handler;
 
-export default handler
-*/
+async function removeBg(buffer) {
+    try {
+        const form = new FormData();
+        form.append('file', buffer, {
+            filename: 'image.jpg',
+            contentType: 'image/jpeg'
+        });
+
+        const { data } = await axios.post(
+            'https://removebg.one/api/predict/v2',
+            form,
+            {
+                headers: {
+                    ...form.getHeaders(),
+                    'user-agent': 'Mozilla/5.0 (Linux; Android 10)',
+                    accept: 'application/json, text/plain, */*',
+                    'sec-ch-ua': '"Chromium";v="139", "Not;A=Brand";v="99"',
+                    platform: 'PC',
+                    'sec-ch-ua-platform': '"Android"',
+                    origin: 'https://removebg.one',
+                    referer: 'https://removebg.one/upload'
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity
+            }
+        );
+
+        return data;
+    } catch {
+        return null;
+    }
+}
