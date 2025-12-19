@@ -1,86 +1,92 @@
-import fs from "fs"
-import path from "path"
-import axios from "axios"
-import fetch from "node-fetch"
-import FormData from "form-data"
+const fs = require('fs');
+const axios = require('axios');
+const FormData = require('form-data');
 
-let handler = async (m, { conn, usedPrefix, command }) => {
-  const q = m.quoted ? m.quoted : m
-  const mime = (q.msg || q).mimetype || ""
+/**
+ * @param {string} filePath
+ * @returns {Promise<string>}
+ */
+async function uploadCatbox(filePath) {
+    const form = new FormData();
+    form.append("reqtype", "fileupload");
+    form.append("fileToUpload", fs.createReadStream(filePath));
 
-  if (!/image\//i.test(mime)) {
-    return conn.sendMessage(
-      m.chat,
-     // { text: `Responde a una imagen con el comando *${usedPrefix + command}*` },
-      { quoted: m }
-    )
-  }
+    const res = await axios.post("https://catbox.moe/user/api.php", form, {
+        headers: form.getHeaders(),
+    });
 
-  const reactStart = { react: { text: "⏳", key: m.key } }
-  const reactDone  = { react: { text: "✅", key: m.key } }
+    if (!res.data.startsWith("https://"))
+        throw new Error("No se pudo subir la imagen a Catbox");
 
-  let tmpPath
-  try {
-    await conn.sendMessage(m.chat, reactStart)
+    return res.data;
+}
 
-    if (!fs.existsSync("./tmp")) fs.mkdirSync("./tmp", { recursive: true })
-
-    const media = await q.download()
-    if (!media || media.length === 0) throw new Error("Downloaded media kosong")
-
-    const rawExt = (mime.split("/")[1] || "png").toLowerCase()
-    const ext = rawExt === "jpeg" ? "jpg" : rawExt
-    tmpPath = path.join("./tmp", `tofigure_${m.sender}.${ext}`)
-    fs.writeFileSync(tmpPath, media)
-
-    const imageUrl = await uploadToUguu(tmpPath)
-    if (!imageUrl) throw new Error("Gagal upload gambar")
-
-    const { data } = await axios.get(
-      `https://api.deline.my.id/ai/figurine?url=${encodeURIComponent(imageUrl)}`,
-      { timeout: 180000 }
-    )
-    if (!data?.status) throw new Error(data?.error || "Gagal memproses figurine")
-
-    const outUrl = data?.result?.url
-    if (!outUrl) throw new Error("URL hasil tidak ditemukan")
-
-    const outImg = await axios.get(outUrl, { responseType: "arraybuffer", timeout: 120000 })
-    const buffer = Buffer.from(outImg.data)
-
-    await conn.sendMessage(
-      m.chat,
-      {
-        image: buffer,
-        caption: `*Aquí tienes*`,
-        mentions: [m.sender],
-      },
-      { quoted: m }
-    )
-
-  } catch (e) {
-    const reason = e?.response?.data || e?.message || String(e)
-    await conn.sendMessage(m.chat, { text: `❌ Error:\n\n${reason}` }, { quoted: m })
-  } finally {
-    if (tmpPath && fs.existsSync(tmpPath)) {
-      try { fs.unlinkSync(tmpPath) } catch {}
+const allEndpoints = {
+    '1': {
+        url: 'https://api-faa.my.id/faa/tofigura?url=',
+        name: 'Figura Style V1',
+        description: 'Efek figura versi 1 - Classic Style'
+    },
+    '2': {
+        url: 'https://api-faa.my.id/faa/tofigurav2?url=',
+        name: 'Figura Style V2',
+        description: 'Efek figura versi 2 - Enhanced Style'
+    },
+    '3': {
+        url: 'https://api-faa.my.id/faa/tofigurav3?url=',
+        name: 'Figura Style V3',
+        description: 'Efek figura versi 3 - Premium Style'
     }
-    await conn.sendMessage(m.chat, reactDone)
-  }
-}
+};
 
-handler.help = ["tofigure"]
-handler.tags = ["ai"]
-handler.command = /^(tofigure)$/i
+let handler = async (m, { conn, usedPrefix, command, text }) => {
+    let q = m.quoted ? m.quoted : m;
+    let mime = (q.msg || q).mimetype || q.mediaType || '';
 
-export default handler
+    if (!/image\/(jpeg|jpg|png)/i.test(mime)) {
+        return m.reply(`Responde la imagen con el comando: *#${usedPrefix + command}*`);
+    }
 
-async function uploadToUguu(filePath) {
-  const form = new FormData()
-  form.append('files[]', fs.createReadStream(filePath))
-  const res = await fetch('https://uguu.se/upload.php', { method: 'POST', body: form })
-  if (!res.ok) throw new Error(`Uguu upload failed: ${res.status}`)
-  const json = await res.json()
-  if (!json.files || !json.files[0] || !json.files[0].url) throw new Error('Respuesta invalida')
-  return json.files[0].url
-}
+    await m.react('⏳');
+
+    try {
+        let version = text?.trim() || '1';
+        if (!allEndpoints[version]) version = '1';
+        const apiInfo = allEndpoints[version];
+
+        const media = await q.download();
+        if (!media) throw new Error('No se pudo descargar la imagen');
+
+        const temp = `./temp_upload.jpg`;
+        fs.writeFileSync(temp, media);
+
+        const catboxUrl = await uploadCatbox(temp);
+
+        const apiUrl = `${apiInfo.url}${encodeURIComponent(catboxUrl)}`;
+
+        const result = await axios.get(apiUrl, {
+            responseType: "arraybuffer",
+        });
+
+        await conn.sendMessage(m.chat, {
+            image: result.data,
+            mimetype: "image/jpeg",
+            caption: `Hasil ${apiInfo.name}`
+        }, { quoted: m });
+
+        fs.unlinkSync(temp);
+        await m.react('✅');
+
+    } catch (err) {
+        console.error(err);
+        await m.react('❌');
+        m.reply(`Error: ${err.message}`);
+    }
+};
+
+handler.command = ['tofigure']
+handler.help = ['tofigure (reply foto) [1-3]'];
+handler.tags = ['ai'];
+handler.limit = true;
+
+module.exports = handler;
