@@ -10,7 +10,7 @@ const menuImages = [
     'https://files.catbox.moe/ofzm16.jpg',
     'https://files.catbox.moe/5t7tnh.jpg',
     'https://files.catbox.moe/37z59v.jpg',
-    'https://files.catbox.moe/rj89tz.jpg'
+    'https://files.catbox.moe/rj89tz.jpg',
     'https://files.catbox.moe/mud62o.jpg'
 ];
 // --- --- --- --- --- --- --- --- --- --- -
