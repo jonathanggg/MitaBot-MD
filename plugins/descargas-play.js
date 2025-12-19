@@ -10,7 +10,7 @@ import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from '@whi
 const execPromise = promisify(exec)
 
 let handler = async (m, { conn, text, command, usedPrefix }) => {
-  if (!text) return m.reply(`✳️ Ingresa el nombre del audio o video.\nEjemplo: *${usedPrefix + command} Bad Bunny*`)
+  if (!text) return m.reply(`✳️ Ingresa el nombre del audio o video.\nEjemplo: *${usedPrefix + command} Confess your love*`)
 
   await m.reply('*🔍 Buscando contenido...*')
 
@@ -21,18 +21,15 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
     const video = search.videos[0]
     const videoUrl = video.url
 
-    // Guardar la URL temporalmente en la base de datos del usuario
     global.db.data.users[m.sender] = global.db.data.users[m.sender] || {}
     global.db.data.users[m.sender].lastVideo = videoUrl
     global.db.data.users[m.sender].lastVideoTime = Date.now()
 
-    // Preparar la imagen para el mensaje interactivo
     const pp = await prepareWAMessageMedia(
       { image: { url: video.thumbnail } },
       { upload: conn.waUploadToServer }
     )
 
-    // Definir el texto del mensaje
     const caption = `
 *🎵 Título:* ${video.title}
 *👤 Canal:* ${video.author.name}
@@ -43,7 +40,6 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
 👇 *Selecciona una opción abajo:*
     `.trim()
 
-    // Crear los botones interactivos
     const buttons = [
       {
         name: "quick_reply",
@@ -82,7 +78,6 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       }
     ]
 
-    // Generar el mensaje interactivo
     const msg = generateWAMessageFromContent(m.chat, {
       viewOnceMessage: {
         message: {
@@ -109,7 +104,6 @@ let handler = async (m, { conn, text, command, usedPrefix }) => {
       }
     }, { quoted: m })
 
-    // Enviar el mensaje
     await conn.relayMessage(m.chat, msg.message, {})
 
   } catch (e) {
@@ -129,16 +123,19 @@ export default handler
 handler.before = async function (m, { conn }) {
   if (!m.text) return
   
-  // Verificar si el usuario tiene una búsqueda pendiente
   const user = global.db.data.users[m.sender]
   if (!user || !user.lastVideo) return
   
-  const text = m.text.trim()
+  let text = m.text.trim()
   
-  // Validar que la respuesta sea 1, 2, 3, 4 o 5 (o que venga del botón)
+  if (text === "🎵 Audio MP3") text = '1'
+  if (text === "🎬 Video MP4") text = '2'
+  if (text === "📄 Audio Doc") text = '3'
+  if (text === "📁 Video Doc") text = '4'
+  if (text === "🎙️ Nota de Voz") text = '5'
+  
   if (!['1', '2', '3', '4', '5'].includes(text)) return
   
-  // Verificar tiempo de expiración (5 minutos)
   const TIMEOUT = 5 * 60 * 1000
   const elapsedTime = Date.now() - (user.lastVideoTime || 0)
   
@@ -153,7 +150,6 @@ handler.before = async function (m, { conn }) {
   delete user.lastVideo
   delete user.lastVideoTime
   
-  // --- Opción 1: Audio MP3 ---
   if (text === '1') {
     await m.reply('*🎧 Descargando audio...*')
     try {
@@ -172,7 +168,6 @@ handler.before = async function (m, { conn }) {
     return true
   }
   
-  // --- Opción 2: Video MP4 ---
   if (text === '2') {
     await m.reply('*🎬 Descargando video...*')
     try {
@@ -192,7 +187,6 @@ handler.before = async function (m, { conn }) {
     return true
   }
   
-  // --- Opción 3: Audio Documento ---
   if (text === '3') {
     await m.reply('*📄 Descargando documento de audio...*')
     try {
@@ -212,7 +206,6 @@ handler.before = async function (m, { conn }) {
     return true
   }
   
-  // --- Opción 4: Video Documento ---
   if (text === '4') {
     await m.reply('*📁 Descargando documento de video...*')
     try {
@@ -232,7 +225,6 @@ handler.before = async function (m, { conn }) {
     return true
   }
   
-  // --- Opción 5: Nota de Voz (Con FFmpeg) ---
   if (text === '5') {
     await m.reply('*🎙️ Procesando nota de voz...*')
     try {
@@ -249,7 +241,6 @@ handler.before = async function (m, { conn }) {
       fs.writeFileSync(inputFile, response.data)
       
       try {
-        // Convertir a OPUS para que sea nota de voz real
         await execPromise(`ffmpeg -i "${inputFile}" -c:a libopus -b:a 128k -vbr on -compression_level 10 "${outputFile}"`)
         
         await conn.sendMessage(m.chat, {
@@ -281,7 +272,6 @@ function sanitizeFilename(name = 'archivo') {
   return name.replace(/[\\/:*?"<>|]+/g, '').trim().slice(0, 100)
 }
 
-// ======== API SAVETUBE ========
 const savetube = {
   api: {
     base: "https://media.savetube.me/api",
