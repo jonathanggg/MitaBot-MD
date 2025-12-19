@@ -1,6 +1,6 @@
-const fs = require'fs';
-const axios = require'axios';
-const FormData = require'form-data';
+import fs from 'fs';
+import axios from 'axios';
+import FormData from 'form-data';
 
 /**
  * @param {string} filePath
@@ -44,10 +44,12 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
     let mime = (q.msg || q).mimetype || q.mediaType || '';
 
     if (!/image\/(jpeg|jpg|png)/i.test(mime)) {
-        return m.reply(`Responde una imagen con el comando: *#${usedPrefix + command}*`);
+        return m.reply(`⚠️ *Responde a una imagen con el comando:* *${usedPrefix + command}*`);
     }
 
     await m.react('⏳');
+
+    let temp = null;
 
     try {
         let version = text?.trim() || '1';
@@ -57,7 +59,12 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
         const media = await q.download();
         if (!media) throw new Error('No se pudo descargar la imagen');
 
-        const temp = `./temp_upload.jpg`;
+        // Usamos un nombre único para evitar conflictos si varios usuarios lo usan a la vez
+        temp = `./tmp/tofigure_${Date.now()}.jpg`; 
+        
+        // Aseguramos que la carpeta tmp exista (opcional, pero recomendado)
+        if (!fs.existsSync('./tmp')) fs.mkdirSync('./tmp');
+        
         fs.writeFileSync(temp, media);
 
         const catboxUrl = await uploadCatbox(temp);
@@ -71,21 +78,25 @@ let handler = async (m, { conn, usedPrefix, command, text }) => {
         await conn.sendMessage(m.chat, {
             image: result.data,
             mimetype: "image/jpeg",
-            caption: `Hasil ${apiInfo.name}`
+            caption: `🎨 *Resultado:* ${apiInfo.name}`
         }, { quoted: m });
 
-        fs.unlinkSync(temp);
         await m.react('✅');
 
     } catch (err) {
         console.error(err);
         await m.react('❌');
-        m.reply(`Error: ${err.message}`);
+        m.reply(`❌ *Error:* ${err.message}`);
+    } finally {
+        // Limpiamos el archivo temporal siempre, ocurra error o no
+        if (temp && fs.existsSync(temp)) {
+            fs.unlinkSync(temp);
+        }
     }
 };
 
-handler.command = ['tofigure']
-handler.help = ['tofigure (reply foto) [1-3]'];
+handler.command = ['tofigure'];
+handler.help = ['tofigure (responde foto) [1-3]'];
 handler.tags = ['ai'];
 handler.limit = true;
 
