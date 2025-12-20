@@ -26,6 +26,5 @@ import fetch from 'node-fetch'
  handler.help = ['mediafire'] 
  handler.tags = ['descargas'] 
  handler.group = true 
- handler.premium = true 
   
  export default handler
