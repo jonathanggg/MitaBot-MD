@@ -17,7 +17,7 @@ global.botNumber = '' //Ejemplo: 5732000000
 
 global.owner = [ 
  "50584887870", 
- "", 
+ "147347912839331", 
  "" 
  ]
 global.mods = []
