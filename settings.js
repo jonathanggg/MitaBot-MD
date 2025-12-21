@@ -19,7 +19,7 @@ global.owner = [
   ['50584887870', '🜲 JonathanG 🜲', true],
   ['51901930696', 'Angelithoxz', true],
   ['573237649689', 'ABRAHAN-M',true],
-  [''],
+  ['147347912839331', 'JonathanG lid', true],
   ['']
 ];
 
