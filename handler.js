@@ -31,10 +31,16 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         
-        // --- MODIFICACIÓN LID/JID ---
-        // Normalizar m.sender para que siempre sea @s.whatsapp.net en la base de datos
+        // --- MODIFICACIÓN LID/JID CORREGIDA ---
+        // Usamos Object.defineProperty para evitar el error "only a getter"
         if (m.sender && m.sender.endsWith('@lid')) {
-            m.sender = m.sender.replace('@lid', '@s.whatsapp.net')
+            const newSender = m.sender.replace('@lid', '@s.whatsapp.net');
+            Object.defineProperty(m, 'sender', {
+                value: newSender,
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
         }
         // ----------------------------
 
@@ -264,8 +270,6 @@ export async function handler(chatUpdate) {
 
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
-        // --- Corrección en Owner Detection ---
-        // Al normalizar m.sender arriba, ya no necesitamos el "detectwhat" complejo
         const isROwner = [...global.owner.map(([number]) => number)].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
         const isOwner = isROwner || m.fromMe
         const isMods = isROwner || global.mods.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
@@ -295,7 +299,6 @@ export async function handler(chatUpdate) {
 
         let usedPrefix
 
-        // Función para resolver LID en grupos (necesario para detectar admins si el bot ve LIDs en metadata)
         async function getLidFromJid(id, conn) {
             if (id.endsWith('@lid')) return id
             const res = await conn.onWhatsApp(id).catch(() => [])
@@ -309,7 +312,6 @@ export async function handler(chatUpdate) {
         const groupMetadata = m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}
         const participants = m.isGroup ? (groupMetadata.participants || []) : []
         
-        // Buscar usuario comparando tanto LID como JID
         const user = participants.find(p => p.id === senderLid || p.id === senderJid) || {}
         const bot = participants.find(p => p.id === botLid || p.id === botJid) || {}
         
@@ -403,14 +405,10 @@ export async function handler(chatUpdate) {
                     continue
                 }
                 m.plugin = name
-                // ---> ¡AQUÍ SE APLICA LA LÓGICA DE primaryBot! <--- 
-                // ************************************************************ let currentChatData = global.db.data.chats[m.chat]; // Obtener datos del chat actualizados 
+                let currentChatData = global.db.data.chats[m.chat];
                 if (currentChatData && currentChatData.primaryBot && currentChatData.primaryBot !== this.user.jid) {
-                    // Si hay un bot primario definido y NO es este bot, ignora el comando. 
-                    // console.log(`[PrimaryBot] Ignorando comando '${command}' en ${m.chat}. Bot ${this.user.jid} no es primario (${currentChatData.primaryBot}).`); // Log opcional 
-                    continue; // Salta al siguiente plugin (efectivamente ignora el comando para este bot) 
+                    continue; 
                 }
-                // ************************************************************ // ---> FIN DE LA LÓGICA primaryBot <--- 
                 if (m.chat in global.db.data.chats || m.sender in global.db.data.users) {
                     let chat = global.db.data.chats[m.chat]
                     let user = global.db.data.users[m.sender]
@@ -530,7 +528,7 @@ export async function handler(chatUpdate) {
                             text = text.replace(new RegExp(key, 'g'), 'Administrador')
                         m.reply(text)
                     }
-                } finally {
+} finally {
                     if (typeof plugin.after === 'function') {
                         try {
                             await plugin.after.call(this, m, extra)
@@ -593,8 +591,7 @@ export async function handler(chatUpdate) {
                 }
             }
         }
-
-        try {
+try {
             if (!opts['noprint']) await (await import(`./lib/print.js`)).default(m, this)
         } catch (e) {
             console.log(m, m.quoted, e)
@@ -642,4 +639,4 @@ watchFile(file, async () => {
             userr.subreloadHandler(false)
         }
     }
-});
+}); 
