@@ -96,20 +96,25 @@ async function convertImage(buffer, prompt) {
         const progress = await new Promise((resolve, reject) => {
             let retries = 20;
             const interval = setInterval(async () => {
-                const xz = await instance.get('/replicate/v1/free/nano/banana/task', {
-                    params: {
-                        user_id: userId,
-                        ...taskData.data
+                try {
+                    const xz = await instance.get('/replicate/v1/free/nano/banana/task', {
+                        params: {
+                            user_id: userId,
+                            ...taskData.data
+                        }
+                    }).then(i => i.data);
+                    
+                    if (xz.msg === 'success') {
+                        clearInterval(interval);
+                        resolve(xz.data.generate_url);
                     }
-                }).then(i => i.data);
-                
-                if (xz.msg === 'success') {
+                    if (--retries <= 0) {
+                        clearInterval(interval);
+                        reject(new Error('Tiempo de espera agotado. Intenta de nuevo.'));
+                    }
+                } catch (err) {
                     clearInterval(interval);
-                    resolve(xz.data.generate_url);
-                }
-                if (--retries <= 0) {
-                    clearInterval(interval);
-                    reject(new Error('Tiempo de espera agotado. Intenta de nuevo.'));
+                    reject(err);
                 }
             }, 2500);
         });
@@ -120,53 +125,25 @@ async function convertImage(buffer, prompt) {
     }
 }
 
-// Handler para el comando .nano
-handler.nano = async (m, { conn, text, quoted }) => {
+let handler = async (m, { conn, text, usedPrefix, command }) => {
     try {
-        const q = m.quoted ? m.quoted : m;
-        const mime = (q.msg || q).mimetype || '';
+        let q = m.quoted ? m.quoted : m;
+        let mime = (q.msg || q).mimetype || '';
         
         if (!mime.startsWith('image/')) {
-            return m.reply('⚠️ Por favor responde a una imagen con el comando .nano');
+            return m.reply(`⚠️ Responde a una imagen con el comando *${usedPrefix + command}*`);
         }
         
         if (!text) {
-            return m.reply('⚠️ Por favor proporciona un prompt.\n\nEjemplo: .nano turn this into an anime character');
+            return m.reply(`⚠️ Por favor proporciona un prompt (texto).\n\nEjemplo: *${usedPrefix + command}* convertir a estilo anime`);
         }
         
-        m.reply('⏳ Procesando imagen con Nano AI...');
+        await m.reply(`⏳ Procesando imagen con *${command}* AI...`);
         
         const media = await q.download();
         const result = await convertImage(media, text);
         
-        await conn.sendFile(m.chat, result, 'nano.png', '✅ Imagen procesada con Nano AI', m);
-        
-    } catch (error) {
-        console.error(error);
-        m.reply(`❌ Error: ${error.message}`);
-    }
-};
-
-// Handler para el comando .banana
-handler.banana = async (m, { conn, text, quoted }) => {
-    try {
-        const q = m.quoted ? m.quoted : m;
-        const mime = (q.msg || q).mimetype || '';
-        
-        if (!mime.startsWith('image/')) {
-            return m.reply('⚠️ Por favor responde a una imagen con el comando .banana');
-        }
-        
-        if (!text) {
-            return m.reply('⚠️ Por favor proporciona un prompt.\n\nEjemplo: .banana make this look like a 3D character figure');
-        }
-        
-        m.reply('⏳ Procesando imagen con Banana AI...');
-        
-        const media = await q.download();
-        const result = await convertImage(media, text);
-        
-        await conn.sendFile(m.chat, result, 'banana.png', '✅ Imagen procesada con Banana AI', m);
+        await conn.sendFile(m.chat, result, 'result.png', `✅ Imagen procesada con éxito`, m);
         
     } catch (error) {
         console.error(error);
@@ -176,6 +153,6 @@ handler.banana = async (m, { conn, text, quoted }) => {
 
 handler.help = ['nano', 'banana'];
 handler.tags = ['ai'];
-handler.command = /^(nano|banana)$/i;
+handler.command = ['nano', 'banana']
 
 export default handler;
