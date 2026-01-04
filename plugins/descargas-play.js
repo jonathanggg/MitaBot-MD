@@ -1,3 +1,4 @@
+// host potente https://dash.swallox.com
 import yts from 'yt-search'
 import axios from 'axios'
 import crypto from 'crypto'
