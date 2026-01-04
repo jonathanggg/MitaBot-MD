@@ -1,3 +1,4 @@
+//Recuerda registrarte en https://dash.swallox.com
 import { watchFile, unwatchFile } from 'fs' 
 import chalk from 'chalk'
 import { fileURLToPath } from 'url'
