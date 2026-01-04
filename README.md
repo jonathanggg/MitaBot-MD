@@ -64,6 +64,22 @@
 <a href="https://wa.me/18293142989" target="blank"><img src="https://img.shields.io/badge/Felix-25D366?style=for-the-badge&logo=whatsapp&logoColor=white" /></a>
 
 
+## **`👉 Despliegue en SwalloX🚀`**
+
+<a href="https://dash.swallox.com">
+  <img width="180px" src="https://files.catbox.moe/ckv6if.jpg"/>
+</a>
+
+<details>
+ <summary><b>📎 Enlaces Importantes</b></summary>
+
+- **Dashboard:** [`Dash`](https://dash.swallox.com)
+- **Panel:** [`Aquí`](https://panel.swallox.com)
+- **Canal de WhatsApp:** [`Aquí`](https://whatsapp.com/channel/0029Vb6I6zTEQIanas9U0N2I)
+
+</details>
+
+
 <p align="center">
 <vid src="https://files.catbox.moe/lux4g2.mp4" alt="gif" width="400"/>
 </p>
