@@ -30,7 +30,6 @@ console.log(`Error : ${e}`)
 //creador y otros
 global.creador = 'Wa.me/50557333744'
 global.ofcbot = `${conn.user.jid.split('@')[0]}`
-global.asistencia = 'Wa.me/50584887870'
 global.namechannel = ' MitaBot :D '
 global.namechannel2 = '☁︎ Novedades sobre Mita 🌷'
 global.namegrupo = '😍 MitaBot MD 😍'
@@ -43,22 +42,13 @@ global.canalIdM = ["120363417289452573@newsletter", "120363368618055639@newslett
 global.canalNombreM = ["MitaBot-MD🙃", " Novedades Sobre Mis Bots🔥"]
 global.channelRD = await getRandomChannel()
 
-//fechas
-global.d = new Date(new Date + 3600000)
-global.locale = 'es'
-global.dia = d.toLocaleDateString(locale, {weekday: 'long'})
-global.fecha = d.toLocaleDateString('es', {day: 'numeric', month: 'numeric', year: 'numeric'})
-global.mes = d.toLocaleDateString('es', {month: 'long'})
-global.año = d.toLocaleDateString('es', {year: 'numeric'})
-global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true})
-
 //Reacciones De Comandos.!
 global.rwait = '🕒'
 global.done = '✅'
 global.error = '✖️'
 global.msm = '⚠︎'
 
-//Emojis determinado de KennyBot
+//Emojis predeterminados
 global.emoji = '❀'
 global.emoji2 = '✧'
 global.emoji3 = '✦'
