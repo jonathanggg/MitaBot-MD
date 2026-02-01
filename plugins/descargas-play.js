@@ -1,4 +1,3 @@
-// host potente. https://dash.swallox.com
 import yts from 'yt-search'
 import axios from 'axios'
 import crypto from 'crypto'
@@ -129,6 +128,7 @@ handler.before = async function (m, { conn }) {
   
   let text = m.text.trim()
   
+  // Mapeo de respuestas rápidas a IDs
   if (text === "🎵 Audio MP3") text = '1'
   if (text === "🎬 Video MP4") text = '2'
   if (text === "📄 Audio Doc") text = '3'
@@ -147,7 +147,6 @@ handler.before = async function (m, { conn }) {
   }
   
   const url = user.lastVideo
-  // Importante: Borramos la variable para evitar descargas dobles accidentales
   delete user.lastVideo
   delete user.lastVideoTime
   
@@ -155,7 +154,7 @@ handler.before = async function (m, { conn }) {
     await m.reply('*🎧 Descargando audio...*')
     try {
       const dl = await savetube.download(url, 'audio')
-      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      if (!dl.status) throw new Error(dl.error || 'Fallo en la API de descarga.')
       
       await conn.sendMessage(m.chat, {
           audio: { url: dl.result.download },
@@ -173,7 +172,7 @@ handler.before = async function (m, { conn }) {
     await m.reply('*🎬 Descargando video...*')
     try {
       const dl = await savetube.download(url, 'video')
-      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      if (!dl.status) throw new Error(dl.error || 'Fallo en la API de descarga.')
       
       await conn.sendMessage(m.chat, {
           video: { url: dl.result.download },
@@ -192,7 +191,7 @@ handler.before = async function (m, { conn }) {
     await m.reply('*📄 Descargando documento de audio...*')
     try {
       const dl = await savetube.download(url, 'audio')
-      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      if (!dl.status) throw new Error(dl.error || 'Fallo en la API de descarga.')
       
       await conn.sendMessage(m.chat, {
           document: { url: dl.result.download },
@@ -211,7 +210,7 @@ handler.before = async function (m, { conn }) {
     await m.reply('*📁 Descargando documento de video...*')
     try {
       const dl = await savetube.download(url, 'video')
-      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      if (!dl.status) throw new Error(dl.error || 'Fallo en la API de descarga.')
       
       await conn.sendMessage(m.chat, {
           document: { url: dl.result.download },
@@ -230,8 +229,9 @@ handler.before = async function (m, { conn }) {
     await m.reply('*🎙️ Procesando nota de voz...*')
     try {
       const dl = await savetube.download(url, 'audio')
-      if (!dl.status) throw new Error('Fallo en la API de descarga.')
+      if (!dl.status) throw new Error(dl.error || 'Fallo en la API de descarga.')
       
+      // Descargamos y convertimos para asegurar compatibilidad de nota de voz
       const response = await axios.get(dl.result.download, { responseType: 'arraybuffer' })
       const tempDir = path.join(process.cwd(), 'tmp')
       if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir)
@@ -250,10 +250,10 @@ handler.before = async function (m, { conn }) {
             ptt: true 
           }, { quoted: m })
           
-        fs.unlinkSync(inputFile)
-        fs.unlinkSync(outputFile)
+        if (fs.existsSync(inputFile)) fs.unlinkSync(inputFile)
+        if (fs.existsSync(outputFile)) fs.unlinkSync(outputFile)
       } catch (err) {
-        // Fallback si no hay ffmpeg
+        // Fallback si falla ffmpeg o no está instalado
         await conn.sendMessage(m.chat, {
             audio: { url: dl.result.download },
             mimetype: 'audio/mp4',
@@ -273,101 +273,91 @@ function sanitizeFilename(name = 'archivo') {
   return name.replace(/[\\/:*?"<>|]+/g, '').trim().slice(0, 100)
 }
 
+// NUEVO SCRAPER INTEGRADO PARA USO DEL BOT
 const savetube = {
-  api: {
-    base: "https://media.savetube.me/api",
-    info: "/v2/info",
-    download: "/download",
-    cdn: "/random-cdn",
+  // Key estática para desencriptar
+  key: Buffer.from('C5D58EF67A7584E4A29F6C35BBC4EB12', 'hex'),
+
+  decrypt: (enc) => {
+    const b = Buffer.from(enc.replace(/\s/g, ''), 'base64')
+    const iv = b.subarray(0, 16)
+    const data = b.subarray(16)
+    const d = crypto.createDecipheriv('aes-128-cbc', savetube.key, iv)
+    return JSON.parse(Buffer.concat([d.update(data), d.final()]).toString())
   },
-  headers: {
-    accept: "*/*",
-    "content-type": "application/json",
-    origin: "https://yt.savetube.me",
-    referer: "https://yt.savetube.me/",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36",
-  },
-  crypto: {
-    hexToBuffer: (hexString) => Buffer.from(hexString.match(/.{1,2}/g).join(""), "hex"),
-    decrypt: async (enc) => {
-      const secretKey = "C5D58EF67A7584E4A29F6C35BBC4EB12";
-      const data = Buffer.from(enc, "base64");
-      const iv = data.slice(0, 16);
-      const content = data.slice(16);
-      const key = savetube.crypto.hexToBuffer(secretKey);
-      const decipher = crypto.createDecipheriv("aes-128-cbc", key, iv);
-      const decrypted = Buffer.concat([decipher.update(content), decipher.final()]);
-      return JSON.parse(decrypted.toString());
-    },
-  },
-  isUrl: (str) => {
+
+  download: async (url, type = 'audio') => {
     try {
-      new URL(str);
-      return /youtube.com|youtu.be/.test(str);
-    } catch (_) {
-      return false;
-    }
-  },
-  youtube: (url) => {
-    const patterns = [
-      /youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-      /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-      /youtu\.be\/([a-zA-Z0-9_-]{11})/,
-    ];
-    for (let pattern of patterns) if (pattern.test(url)) return url.match(pattern)[1];
-    return null;
-  },
-  request: async (endpoint, data = {}, method = "post") => {
-    try {
-      const { data: response } = await axios({
-        method,
-        url: `${endpoint.startsWith("http") ? "" : savetube.api.base}${endpoint}`,
-        data: method === "post" ? data : undefined,
-        params: method === "get" ? data : undefined,
-        headers: savetube.headers,
-      });
-      return { status: true, code: 200, data: response };
-    } catch (error) {
-      return { status: false, code: error.response?.status || 500, error: error.message };
-    }
-  },
-  getCDN: async () => {
-    const response = await savetube.request(savetube.api.cdn, {}, "get");
-    if (!response.status) return response;
-    return { status: true, code: 200, data: response.data.cdn };
-  },
-  download: async (link, type = "audio") => {
-    if (!savetube.isUrl(link)) return { status: false, code: 400, error: "URL inválida" };
-    const id = savetube.youtube(link);
-    if (!id) return { status: false, code: 400, error: "No se pudo obtener ID" };
-    try {
-      const cdnx = await savetube.getCDN();
-      if (!cdnx.status) return cdnx;
-      const cdn = cdnx.data;
-      const videoInfo = await savetube.request(`https://${cdn}${savetube.api.info}`, {
-        url: `https://www.youtube.com/watch?v=${id}`,
-      });
-      if (!videoInfo.status) return videoInfo;
-      const decrypted = await savetube.crypto.decrypt(videoInfo.data.data);
-      const downloadData = await savetube.request(`https://${cdn}${savetube.api.download}`, {
-        id,
-        downloadType: type === "audio" ? "audio" : "video",
-        quality: type === "audio" ? "128" : "720",
-        key: decrypted.key,
-      });
-      if (!downloadData.data.data?.downloadUrl)
-        return { status: false, code: 500, error: "No se encontró enlace de descarga" };
+      // 1. Obtener CDN Random
+      const random = await axios.get('https://media.savetube.vip/api/random-cdn', {
+        headers: {
+          origin: 'https://save-tube.com',
+          referer: 'https://save-tube.com/',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
+        }
+      })
+      const cdn = random.data.cdn
+
+      // 2. Obtener Info del video y desencriptar
+      const info = await axios.post(`https://${cdn}/v2/info`, { url }, {
+        headers: {
+          'Content-Type': 'application/json',
+          origin: 'https://save-tube.com',
+          referer: 'https://save-tube.com/',
+          'User-Agent': 'Mozilla/5.0'
+        }
+      })
+
+      if (!info.data || !info.data.status) return { status: false, error: 'Video no encontrado en API.' }
+      const json = savetube.decrypt(info.data.data)
+
+      // 3. Seleccionar la calidad según el tipo solicitado para no descargar todo
+      let formatToDownload
+      
+      if (type === 'audio') {
+        // Buscar preferiblemente MP3 128kbps o el mejor disponible
+        formatToDownload = json.audio_formats.find(a => a.quality === 128) || json.audio_formats[0]
+      } else {
+        // Buscar preferiblemente 720p, si no 480p, si no el mejor disponible
+        formatToDownload = json.video_formats.find(v => v.quality === 720) || 
+                           json.video_formats.find(v => v.quality === 480) || 
+                           json.video_formats[0]
+      }
+
+      if (!formatToDownload) return { status: false, error: 'Formato no disponible.' }
+
+      // 4. Solicitar el link de descarga específico
+      const dlRes = await axios.post(`https://${cdn}/download`, {
+          id: json.id,
+          key: json.key,
+          downloadType: type, // 'audio' o 'video'
+          quality: String(formatToDownload.quality)
+        }, {
+        headers: {
+          'Content-Type': 'application/json',
+          origin: 'https://save-tube.com',
+          referer: 'https://save-tube.com/',
+          'User-Agent': 'Mozilla/5.0'
+        }
+      })
+
+      const downloadUrl = dlRes.data?.data?.downloadUrl
+
+      if (!downloadUrl) return { status: false, error: 'No se pudo generar el enlace.' }
+
       return {
         status: true,
-        code: 200,
         result: {
-          title: decrypted.title || "YouTube Media",
-          download: downloadData.data.data.downloadUrl,
-          duration: decrypted.duration,
-        },
-      };
-    } catch (error) {
-      return { status: false, code: 500, error: error.message };
+          title: json.title,
+          duration: json.duration,
+          thumbnail: json.thumbnail,
+          download: downloadUrl,
+          quality: formatToDownload.label
+        }
+      }
+
+    } catch (e) {
+      return { status: false, error: e.message }
     }
-  },
-};
+  }
+}
