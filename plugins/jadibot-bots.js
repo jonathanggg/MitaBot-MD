@@ -33,7 +33,7 @@ const message = `*🌹Lista de bots conectados a ${botname}
 ❏ En este grupo: *${groupBots.length}* bots
 ${botsGroup}`
 const mentionList = groupBots.map(bot => bot.endsWith("@s.whatsapp.net") ? bot : `${bot}@s.whatsapp.net`)
-rcanal.contextInfo.mentionedJid = mentionList
+contextInfo.mentionedJid = mentionList
 await conn.sendMessage(m.chat, { text: message }, { quoted: m })
 } catch (error) {
 m.reply(`⚠︎ Se ha producido un problema.\n> Usa *${usedPrefix}report* para informarlo.\n\n${error.message}`)
