@@ -5,8 +5,8 @@ import { exec } from 'child_process'
 import { promisify } from 'util'
 import fs from 'fs'
 import path from 'path'
-import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from '@whiskeysockets/baileys'
-
+import pkg from '@whiskeysockets/baileys';
+const { prepareWAMessageMedia, generateWAMessageFromContent, proto } = pkg;
 const execPromise = promisify(exec)
 
 let handler = async (m, { conn, text, command, usedPrefix }) => {
