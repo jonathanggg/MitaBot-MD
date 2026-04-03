@@ -26,7 +26,7 @@ const v = global.conns.find((conn) => conn.user.jid === bot)
 const uptime = isMainBot ? convertirMsADiasHorasMinutosSegundos(Date.now() - global.conn.uptime) : v?.uptime ? convertirMsADiasHorasMinutosSegundos(Date.now() - v.uptime) : "Activo desde ahora"
 const mention = bot.replace(/[^0-9]/g, '')
 return `@${mention}\n> Bot: ${isMainBot ? 'Principal' : 'Sub-Bot'}\n> Online: ${uptime}`}).join("\n\n") : `😓 No hay bots activos en este grupo`
-const message = `*✨Bots conectados a Mita:* ${users.length - 1}*
+const message = `*✨Bots conectados a Mita:* ${users.length - 1}
 
 En este grupo: *${groupBots.length}* bots
 ${botsGroup}`
