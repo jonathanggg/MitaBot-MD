@@ -26,6 +26,8 @@ import {makeWASocket, protoType, serialize} from './lib/simple.js'
 import {Low, JSONFile} from 'lowdb'
 import {mongoDB, mongoDBV2} from './lib/mongoDB.js'
 import store from './lib/store.js'
+import qrcode from 'qrcode' // <-- Importamos la librería para generar el QR en terminal
+
 const {proto} = (await import('@whiskeysockets/baileys')).default
 import pkg from 'google-libphonenumber'
 const { PhoneNumberUtil } = pkg
@@ -37,8 +39,11 @@ const {CONNECTING} = ws
 const {chain} = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
-//const yuw = dirname(fileURLToPath(import.meta.url))
-//let require = createRequire(megu)
+// Variables globales seguras para evitar ReferenceError
+const sessions = global.sessions || 'sessions'
+const jadi = global.jadi || 'JadiBots'
+const nameqr = global.nameqr || 'MitaBot'
+
 let { say } = cfonts
 
 console.log(chalk.bold.redBright(`\n𖤛 Iniciando Mita  𖤛\n`))
@@ -74,7 +79,6 @@ const __dirname = global.__dirname(import.meta.url)
 
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 global.prefix = new RegExp('^[#/!.]')
-// global.opts['db'] = process.env['db']
 
 global.db = new Low(/https?:\/\//.test(opts['db'] || '') ? new cloudDBAdapter(opts['db']) : new JSONFile('./src/database/database.json'))
 
@@ -137,7 +141,7 @@ console.debug = () => {}
 
 const connectionOptions = {
 logger: pino({ level: 'silent' }),
-printQRInTerminal: opcion == '1' ? true : methodCodeQR ? true : false,
+printQRInTerminal: false, // Desactivado para imprimirlo manualmente de forma segura
 mobile: MethodMobile, 
 browser: opcion == '1' ? [`${nameqr}`, 'Edge', '20.0.04'] : methodCodeQR ? [`${nameqr}`, 'Edge', '20.0.04'] : ['Ubuntu', 'Edge', '110.0.1587.56'],
 auth: {
@@ -186,16 +190,16 @@ console.log(chalk.bold.white(chalk.bgMagenta(`✧ CÓDIGO DE VINCULACIÓN ✧`))
 
 conn.isInit = false;
 conn.well = false;
-//conn.logger.info(`✦  H E C H O\n`)
 
 if (!opts['test']) {
 if (global.db) setInterval(async () => {
 if (global.db.data) await global.db.write()
-if (opts['autocleartmp'] && (global.support || {}).find) (tmp = [os.tmpdir(), 'tmp', `${jadi}`], tmp.forEach((filename) => cp.spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete'])));
+if (opts['autocleartmp'] && (global.support || {}).find) {
+    let tmp = [tmpdir(), 'tmp', `${jadi}`]
+    tmp.forEach((filename) => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']))
+}
 }, 30 * 1000);
 }
-
-// if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
 
 async function connectionUpdate(update) {
 const {connection, lastDisconnect, isNewLogin} = update;
@@ -207,10 +211,16 @@ await global.reloadHandler(true).catch(console.error);
 global.timestamp.connect = new Date;
 }
 if (global.db.data == null) loadDatabase();
-if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
+
+if (update.qr != 0 && update.qr != undefined) {
 if (opcion == '1' || methodCodeQR) {
-console.log(chalk.bold.yellow(`\n❐ ESCANEA EL CÓDIGO QR EXPIRA EN 45 SEGUNDOS`))}
+console.log(chalk.bold.yellow(`\n❐ ESCANEA EL CÓDIGO QR, EXPIRA EN 45 SEGUNDOS`))
+qrcode.toString(update.qr, { type: 'terminal', small: true }, function (err, url) {
+if (!err) console.log(url)
+})
 }
+}
+
 if (connection == 'open') {
 console.log(chalk.bold.green('\n MitaBot-MD Conectada con éxito'))
 }
@@ -234,7 +244,7 @@ console.log(chalk.bold.cyanBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄�
 await global.reloadHandler(true).catch(console.error)
 } else if (reason === DisconnectReason.timedOut) {
 console.log(chalk.bold.yellowBright(`\n╭┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ▸\n┆ ⧖ TIEMPO DE CONEXIÓN AGOTADO, RECONECTANDO....\n╰┄┄┄┄┄┄┄┄┄┄┄┄┄┄ • • • ┄┄┄┄┄┄┄┄┄┄┄┄┄┄ ▸`))
-await global.reloadHandler(true).catch(console.error) //process.send('reset')
+await global.reloadHandler(true).catch(console.error) 
 } else {
 console.log(chalk.bold.redBright(`\n⚠︎！ RAZON DE DESCONEXIÓN DESCONOCIDA: ${reason || 'No encontrado'} >> ${connection || 'No encontrado'}`))
 }}
@@ -284,8 +294,6 @@ conn.ev.on('creds.update', conn.credsUpdate)
 isInit = false
 return true
 };
-
-//Arranque nativo para subbots by - ReyEndymion >> https://github.com/ReyEndymion
 
 global.rutaJadiBot = join(__dirname, './JadiBots')
 
@@ -480,4 +488,3 @@ return phoneUtil.isValidNumber(parsedNumber)
 } catch (error) {
 return false
 }}
-  
