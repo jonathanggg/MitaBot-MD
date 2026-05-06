@@ -1,28 +1,26 @@
 //Código creado por JonathanG, dejen creditos hdp >:v
 
 const menuVideos = [
-    'https://files.catbox.moe/slo1l0.mp4',
-    'https://files.catbox.moe/awoz6k.mp4',
-    'https://files.catbox.moe/mci2sn.mp4',
+    'https://files.catbox.moe/p5hu05.mp4',
+    'https://files.catbox.moe/yxfj7f.mp4',
+    'https://files.catbox.moe/yxfj7f.mp4',
     'https://files.catbox.moe/n1rtnl.mp4'
 ];
 const menuImages = [
-    'https://files.catbox.moe/ofzm16.jpg',
-    'https://files.catbox.moe/5t7tnh.jpg',
-    'https://files.catbox.moe/37z59v.jpg',
-    'https://files.catbox.moe/rj89tz.jpg',
-    'https://files.catbox.moe/mud62o.jpg'
+    'https://files.catbox.moe/e1cdav.jpg',
+    'https://files.catbox.moe/6hgx16.jpg',
+    'https://files.catbox.moe/yfw28w.jpg',
+    'https://files.catbox.moe/26n7q4.jpg',
+    'https://files.catbox.moe/abygg4.jpg'
 ];
 // --- --- --- --- --- --- --- --- --- --- -
 
 // Función auxiliar para el tiempo de actividad 
 function clockString(ms) {
-    let d = isNaN(ms) ? '--' : Math.floor(ms / 86400000)
     let h = isNaN(ms) ? '--' : Math.floor(ms / 3600000) % 24
     let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
     let s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60
-    // return [d, 'd ', h, 'h ', m, 'm ', s, 's '].map(v => v.toString().padStart(2, 0)).join('') // Formato con días
-     return [h, 'h ', m, 'm ', s, 's '].map(v => v.toString().padStart(2, 0)).join(''); // Formato horas, minutos, segundos
+    return [h, 'h ', m, 'm ', s, 's '].map(v => v.toString().padStart(2, 0)).join('');
 }
 
 
@@ -35,92 +33,88 @@ let handler = async (m, { conn, args }) => {
     let totalreg = Object.keys(global.db.data.users).length; 
     let totalCommands = Object.values(global.plugins).filter((v) => v.help && v.tags).length; 
     
-    let botSettings = global.db.data.settings[conn.user.jid] || {};
-    
+    // Identificación del bot para lógica principal/sub-bot y estructura segura de settings
+    let botId = conn.user.jid; 
+    let botSettings = global.db.data.settings[conn.user.id] || {};
+    let bot = global.db.data.settings[conn.user.id] || {};
 
     let txt = `
-¡Hola ${name} Me llamo  ${botname} 
+¡Hola ${name}! 👋 Me llamo ${botname}
 
-╭━━ INFO - BOT ━ 
-┃Tiempo activo: ${uptime}
-┃Registros ${totalreg}
-┃Comandos ${totalCommands}
-┃✦ Canal: https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00
-╰━━━━━━━━━━━━━
+┌──「 📊 *INFO - BOT* 」
+│ ⏱️ *Actividad:* ${uptime}
+│ 👥 *Registros:* ${totalreg}
+│ ⚙️ *Comandos:* ${totalCommands}
+│ 📢 *Canal:* https://whatsapp.com/channel/0029VbAt0n3It5rv4WOUcH00
+└──────────────
 
-Quieres ser un sub bot?
+🤖 *¿Quieres ser un sub-bot?*
 Utiliza *#qr* ó *#code*
 
-✰ Lista de comandos:
+✰ *LISTA DE COMANDOS* ✰
 
-╭─⬣「 ✰DESCARGAS✰ 」⬣
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#facebook + <url>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#play + <texto>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tiktok + <url>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#video + <texto>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#audiodoc
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#videodoc
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#ig  + <url>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#mediafire + <url>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#spotify + <url>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#anime
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#animedl
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#dl
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
-│
-╰─⬣
+┌──「 📥 *DESCARGAS* 」
+│ ∘ #facebook <url>
+│ ∘ #play <texto>
+│ ∘ #tiktok <url>
+│ ∘ #video <texto>
+│ ∘ #audiodoc
+│ ∘ #videodoc
+│ ∘ #ig <url>
+│ ∘ #mediafire <url>
+│ ∘ #spotify <url>
+│ ∘ #anime
+│ ∘ #animedl
+│ ∘ #dl
+└──────────────
 
+┌──「 🔍 *BÚSQUEDAS* 」
+│ ∘ #pinterest <texto>
+│ ∘ #tiktoksearch <texto>
+│ ∘ #tweetpost
+│ ∘ #wikipedia <búsqueda>
+└──────────────
 
-╭─⬣「 ✰BUSQUEDAS✰ 」⬣
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#pinterest + <texto>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tiktoksearch + <texto>
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tweetpost
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#wikipedia <búsqueda>
-╰─⬣
+┌──「 🛠️ *CONFIGURACIÓN* 」
+│ ∘ #antibot 
+│ ∘ #antidelete
+│ ∘ #antilink
+│ ∘ #antilink2
+│ ∘ #antiprivado
+│ ∘ #antispam
+│ ∘ #antisubbots
+│ ∘ #antitoxic
+│ ∘ #antitrabas
+│ ∘ #antiver
+│ ∘ #autoaceptar
+│ ∘ #autorechazar
+│ ∘ #autoresponder
+│ ∘ #autosticker
+└──────────────
 
-╭─⬣「 ✰CONFIGURACIÓN✰ 」⬣
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antibot 
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antidelete
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antilink
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antilink2
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antiprivado
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antispam
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antisubbots
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antitoxic
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antitrabas
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#antiver
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autoaceptar
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autorechazar
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autoresponder
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#autosticker
-╰─⬣
+┌──「 🛡️ *GRUPOS* 」
+│ ∘ #promote
+│ ∘ #setbye
+│ ∘ #setwelcome
+│ ∘ #setprimary
+│ ∘ #tag
+└──────────────
 
-╭─⬣「 ✰GRUPOS✰ 」⬣
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#promote
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setbye
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setwelcome
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#setprimary
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tag
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
-╰─⬣
-
-╭─⬣「 ✰TOOLS✰ 」⬣
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#s
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#qc
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#toimg
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#p
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#cbx
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#toghibli
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#imagedit
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#tofigure
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#hd
-│⁖ฺ۟̇࣪·֗٬̤⃟⚡#
-╰─⬣
+┌──「 🪄 *TOOLS* 」
+│ ∘ #s
+│ ∘ #qc
+│ ∘ #toimg
+│ ∘ #p
+│ ∘ #cbx
+│ ∘ #toghibli
+│ ∘ #imagedit
+│ ∘ #tofigure
+│ ∘ #hd
+└──────────────
 
 > © Powered by Staff Mita Bot
 `.trim();
-let bot = global.db.data.settings[conn.user.jid]
+
     // --- Lógica para elegir aleatoriamente entre video/gif o imagen ---
     const useVideo = Math.random() < 0.5; // 50% de probabilidad de usar video/gif
     let messageOptions = {};
@@ -178,10 +172,8 @@ let bot = global.db.data.settings[conn.user.jid]
     }
 };
 
-
 handler.help = ['menu']; 
 handler.tags = ['main'];
 handler.command =  ['menu', 'menú', 'help']; 
-
 
 export default handler;
