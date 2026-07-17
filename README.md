@@ -153,5 +153,3 @@ npm start
 
 <strong>JonathanG</strong>
 </p>
-```
-
