@@ -109,7 +109,7 @@ echo 'export GYP_DEFINES="android_ndk_path=\"\""' >> ~/.bashrc
 ```
  5. **Clonar el repositorio:**
 ```bash
-git clone [https://github.com/jonathanggg/MitaBot-MD.git](https://github.com/jonathanggg/MitaBot-MD.git) Mita
+git clone https://github.com/jonathanggg/MitaBot-MD.git Mita
 
 ```
  6. **Entrar a la carpeta del bot:**
