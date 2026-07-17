@@ -1,4 +1,3 @@
-
 # 🌟 Mita Bot MD 🌟
 
 <p align="center">
@@ -82,23 +81,58 @@
 
 ## **`👉 Instalación en Termux 📱`**
 
-Puedes instalar Mita Bot MD en tu dispositivo Android utilizando Termux. Copia y pega los siguientes comandos en tu terminal:
+Puedes instalar Mita Bot MD en tu dispositivo Android utilizando Termux. Copia y pega los siguientes comandos uno por uno en tu terminal:
 
+1. **Dar permisos de almacenamiento:**
 ```bash
 termux-setup-storage
+
+```
+ 2. **Actualizar paquetes:**
+```bash
 pkg update && pkg upgrade -y
+
+```
+ 3. **Instalar dependencias necesarias:**
+```bash
 pkg install -y nodejs-lts git python clang make pkg-config libvips ffmpeg libwebp
 
+```
+ 4. **Configurar variables de entorno (Importante para evitar errores con Sharp):**
+```bash
 export GYP_DEFINES="android_ndk_path=''"
+
+```
+```bash
 echo 'export GYP_DEFINES="android_ndk_path=\"\""' >> ~/.bashrc
 
+```
+ 5. **Clonar el repositorio:**
+```bash
 git clone [https://github.com/jonathanggg/MitaBot-MD.git](https://github.com/jonathanggg/MitaBot-MD.git) Mita
+
+```
+ 6. **Entrar a la carpeta del bot:**
+```bash
 cd Mita
+
+```
+ 7. **Instalar los módulos de Node.js:**
+```bash
 npm i
 
+```
+ 8. **Instalar Sharp para procesar imágenes (optimizado para Android/Termux):**
+```bash
 npm install --cpu=wasm32 sharp
+
+```
+```bash
 npm install @img/sharp-wasm32
 
+```
+ 9. **Iniciar el bot:**
+```bash
 npm start
 
 ```
@@ -119,3 +153,5 @@ npm start
 
 <strong>JonathanG</strong>
 </p>
+```
+
