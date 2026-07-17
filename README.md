@@ -136,20 +136,3 @@ npm install @img/sharp-wasm32
 npm start
 
 ```
-<p align="center">
-<vid src="https://files.catbox.moe/lux4g2.mp4" alt="gif" width="400"/>
-</p>
-<div align="center">
-```
-╭━━━━━━━━━━━━╮
-┃     MITA BOT      ┃
-╰━━━━━━━━━━━━╯
-
-```
-</div>
-<p align="center">
-<img src="https://files.catbox.moe/o3gtwe.jpg" width="400" height="400" alt="JonathanG"/>
-
-
-<strong>JonathanG</strong>
-</p>
