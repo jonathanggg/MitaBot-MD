@@ -23,13 +23,14 @@
 
 <div align="center">
   
+
 ```
 ██╗    ██╗   ███████╗██╗      ██████╗     ██████╗    ███╗   ███╗      ███████╗
 ██║    ██║   ██╔════╝██║     ██╔════╝    ██╔═══██╗  ████╗ ████     ║██╔════╝
-██║ █╗ ██║  █████╗   ██║     ██║            ██║   ██║    ██╔████╔██    ║█████╗  
-██║███╗██  ║██╔══╝  ██║     ██║            ██║   ██║    ██║╚██╔╝██    ║██╔══╝  
+██║ █╗ ██║  █████╗   ██║     ██║            ██║   ██║    ██╔████╔██    ║█████╗
+██║███╗██  ║██╔══╝  ██║     ██║            ██║   ██║    ██║╚██╔╝██    ║██╔══╝
 ╚███╔███╔╝ ███████╗███████╗╚██████╗╚██████╔╝   ██║ ╚═╝ ██     ║███████╗
- ╚══╝╚══╝  ╚══════╝╚══════╝ ╚═════╝  ╚═════╝      ╚═╝     ╚═╝     ╚══════╝
+╚══╝╚══╝  ╚══════╝╚══════╝ ╚═════╝  ╚═════╝      ╚═╝     ╚═╝     ╚══════╝
 ```
 </div>
 
@@ -79,22 +80,42 @@
 
 </details>
 
+## **`👉 Instalación en Termux 📱`**
 
+Puedes instalar Mita Bot MD en tu dispositivo Android utilizando Termux. Copia y pega los siguientes comandos en tu terminal:
+
+```bash
+termux-setup-storage
+pkg update && pkg upgrade -y
+pkg install -y nodejs-lts git python clang make pkg-config libvips ffmpeg libwebp
+
+export GYP_DEFINES="android_ndk_path=''"
+echo 'export GYP_DEFINES="android_ndk_path=\"\""' >> ~/.bashrc
+
+git clone [https://github.com/jonathanggg/MitaBot-MD.git](https://github.com/jonathanggg/MitaBot-MD.git) Mita
+cd Mita
+npm i
+
+npm install --cpu=wasm32 sharp
+npm install @img/sharp-wasm32
+
+npm start
+
+```
 <p align="center">
 <vid src="https://files.catbox.moe/lux4g2.mp4" alt="gif" width="400"/>
 </p>
-
 <div align="center">
-  
 ```
 ╭━━━━━━━━━━━━╮
 ┃     MITA BOT      ┃
 ╰━━━━━━━━━━━━╯
+
 ```
 </div>
-
 <p align="center">
 <img src="https://files.catbox.moe/o3gtwe.jpg" width="400" height="400" alt="JonathanG"/>
-<br>
+
+
 <strong>JonathanG</strong>
 </p>
