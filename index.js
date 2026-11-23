@@ -46,7 +46,25 @@ const nameqr = global.nameqr || 'MitaBot'
 
 let { say } = cfonts
 
-console.log(chalk.bold.redBright(`\n𖤛 Iniciando Mita  𖤛\n`))
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const line = (char = '━', length = 62) => char.repeat(length)
+const bootStep = async (label, color = 'cyan') => {
+    process.stdout.write(`${chalk[color]('  ◈')} ${chalk.white(label)} `)
+    await sleep(110)
+    console.log(chalk.green('✓'))
+}
+
+function printConsoleHeader() {
+    console.clear()
+    console.log(chalk.magentaBright(`\n╭${line('━')}╮`))
+    console.log(chalk.magentaBright('│') + chalk.bold.white('                 MITABOT-MD                 ') + chalk.magentaBright('│'))
+    console.log(chalk.magentaBright('│') + chalk.gray('          WhatsApp Multi-Device Bot          ') + chalk.magentaBright('│'))
+    console.log(chalk.magentaBright(`╰${line('━')}╯`))
+    console.log(chalk.cyanBright('\n  ✦ ACTUALIZACIÓN VISUAL DEL SISTEMA ✦'))
+    console.log(chalk.gray(`  ${new Date().toLocaleString('es-NI')}\n`))
+}
+
+printConsoleHeader()
 
 say('MitaBot-MD', {
 font: 'block',
@@ -60,8 +78,14 @@ align: 'center',
 colors: ['blueBright']
 })
 
+console.log(chalk.gray(`\n${line('·')}`))
+await bootStep('Preparando interfaz de consola')
+await bootStep('Cargando configuración del bot')
+await bootStep('Inicializando módulos de Baileys')
+
 protoType()
 serialize()
+console.log(chalk.greenBright('\n  ✓ Sistema visual listo\n'))
 
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') {
 return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString();
@@ -129,10 +153,13 @@ opcion = '1'
 }
 if (!methodCodeQR && !methodCode && !fs.existsSync(`./${sessions}/creds.json`)) {
 do {
-opcion = await question(colores('⌨ Como quieres iniciar el juego:\n') + opcionQR('1. Con código QR\n') + opcionTexto('2. Con código de texto de 8 dígitos\n--> '))
+console.log(chalk.cyanBright(`\n╭${line('─')}╮`))
+console.log(chalk.cyanBright('│') + chalk.bold.white('             MÉTODO DE CONEXIÓN             ') + chalk.cyanBright('│'))
+console.log(chalk.cyanBright(`╰${line('─')}╯`))
+opcion = await question(opcionQR('  [1] ') + chalk.white('Código QR\n') + opcionTexto('  [2] ') + chalk.white('Código de vinculación\n') + chalk.magentaBright('  › '))
 
 if (!/^[1-2]$/.test(opcion)) {
-console.log(chalk.bold.redBright(`✦ No se permiten numeros que no sean 1 o 2, tampoco letras o símbolos especiales.`))
+console.log(chalk.bold.redBright(`  ✖ Selecciona únicamente 1 o 2.`))
 }} while (opcion !== '1' && opcion !== '2' || fs.existsSync(`./${sessions}/creds.json`))
 } 
 
@@ -183,7 +210,10 @@ addNumber = phoneNumber.replace(/\D/g, '')
 setTimeout(async () => {
 let codeBot = await conn.requestPairingCode(addNumber)
 codeBot = codeBot?.match(/.{1,4}/g)?.join("-") || codeBot
-console.log(chalk.bold.white(chalk.bgMagenta(`✧ CÓDIGO DE VINCULACIÓN ✧`)), chalk.bold.white(chalk.white(codeBot)))
+console.log(chalk.magentaBright(`\n╭${line('─', 42)}╮`))
+console.log(chalk.magentaBright('│') + chalk.bold.white('     CÓDIGO DE VINCULACIÓN     ') + chalk.magentaBright('│'))
+console.log(chalk.magentaBright('╰' + line('─', 42) + '╯'))
+console.log(chalk.bold.white(`\n              ${codeBot}\n`))
 }, 3000)
 }}}
 }
@@ -214,7 +244,10 @@ if (global.db.data == null) loadDatabase();
 
 if (update.qr != 0 && update.qr != undefined) {
 if (opcion == '1' || methodCodeQR) {
-console.log(chalk.bold.yellow(`\n❐ ESCANEA EL CÓDIGO QR, EXPIRA EN 45 SEGUNDOS`))
+console.log(chalk.yellowBright(`\n╭${line('─')}╮`))
+console.log(chalk.yellowBright('│') + chalk.bold.white('       ESCANEA EL CÓDIGO QR       ') + chalk.yellowBright('│'))
+console.log(chalk.yellowBright('│') + chalk.gray('       Expira en 45 segundos      ') + chalk.yellowBright('│'))
+console.log(chalk.yellowBright(`╰${line('─')}╯`))
 qrcode.toString(update.qr, { type: 'terminal', small: true }, function (err, url) {
 if (!err) console.log(url)
 })
@@ -222,7 +255,10 @@ if (!err) console.log(url)
 }
 
 if (connection == 'open') {
-console.log(chalk.bold.green('\n MitaBot-MD Conectada con éxito'))
+console.log(chalk.greenBright(`\n╭${line('━')}╮`))
+console.log(chalk.greenBright('│') + chalk.bold.white('       MITABOT CONECTADO       ') + chalk.greenBright('│'))
+console.log(chalk.greenBright('│') + chalk.gray('   Sistema listo para recibir mensajes   ') + chalk.greenBright('│'))
+console.log(chalk.greenBright(`╰${line('━')}╯\n`))
 }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode
 if (connection === 'close') {
