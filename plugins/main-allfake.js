@@ -88,6 +88,8 @@ global.taguser = '@' + m.sender.split("@s.whatsapp.net")
 var more = String.fromCharCode(8206)
 global.readMore = more.repeat(850)
 
+const fecha = moment().tz('America/Managua').format('DD/MM/YYYY')
+const tiempo = moment().tz('America/Managua').format('HH:mm:ss')
 global.packsticker = `┊🐋Kenny🧠Mita\n↳https://mancosyasociados.wuaze.com/\n┊👹Info:\n↳https://mancosyasociados.wuaze.com/grupo \n ✦ Fecha: ${fecha}\nⴵ Hora: ${tiempo}`;
 global.packsticker2 = `\n👑Bot: @${botname}\n👑Usuario: @${nombre}\n\n${dev}`
 
