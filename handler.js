@@ -1,4 +1,4 @@
-import { smsg } from './lib/simple.js'
+import { smsg, resolveUserJid, rememberLidMappings, jidNumber } from './lib/simple.js'
 import { format } from 'util' 
 import { fileURLToPath } from 'url'
 import path, { join } from 'path'
@@ -31,18 +31,16 @@ export async function handler(chatUpdate) {
         if (!m)
             return
         
-        // --- MODIFICACIÓN LID/JID CORREGIDA ---
-        // Usamos Object.defineProperty para evitar el error "only a getter"
-        if (m.sender && m.sender.endsWith('@lid')) {
-            const newSender = m.sender.replace('@lid', '@s.whatsapp.net');
+        const rawSender = m.sender
+        const resolvedSender = await resolveUserJid(this, m.chat, rawSender)
+        if (resolvedSender && resolvedSender !== rawSender) {
             Object.defineProperty(m, 'sender', {
-                value: newSender,
+                value: resolvedSender,
                 writable: true,
                 enumerable: true,
                 configurable: true
-            });
+            })
         }
-        // ----------------------------
 
         m.exp = 0
         m.coin = false
@@ -299,21 +297,20 @@ export async function handler(chatUpdate) {
 
         let usedPrefix
 
-        async function getLidFromJid(id, conn) {
-            if (id.endsWith('@lid')) return id
-            const res = await conn.onWhatsApp(id).catch(() => [])
-            return res[0]?.lid || id
-        }
-        
-        const senderLid = await getLidFromJid(m.sender, conn)
-        const botLid = await getLidFromJid(conn.user.jid, conn)
-        const senderJid = m.sender
-        const botJid = conn.user.jid
+        const senderJid = await resolveUserJid(this, m.chat, m.sender)
+        const botJid = await resolveUserJid(this, m.chat, conn.user?.jid || conn.user?.id)
+        const botLid = conn.user?.lid || ''
         const groupMetadata = m.isGroup ? ((conn.chats[m.chat] || {}).metadata || await this.groupMetadata(m.chat).catch(_ => null)) : {}
-        const participants = m.isGroup ? (groupMetadata.participants || []) : []
-        
-        const user = participants.find(p => p.id === senderLid || p.id === senderJid) || {}
-        const bot = participants.find(p => p.id === botLid || p.id === botJid) || {}
+        const participants = m.isGroup ? (groupMetadata?.participants || []) : []
+        rememberLidMappings(participants)
+
+        const participantMatches = (participant, jid) => {
+            const wanted = jidNumber(jid)
+            return [participant?.id, participant?.jid, participant?.lid, participant?.phoneNumber]
+                .some(id => jidNumber(id) && jidNumber(id) === wanted)
+        }
+        const user = participants.find(p => participantMatches(p, senderJid) || participantMatches(p, m.sender)) || {}
+        const bot = participants.find(p => participantMatches(p, botJid) || participantMatches(p, botLid)) || {}
         
         const isRAdmin = user?.admin === "superadmin"
         const isAdmin = isRAdmin || user?.admin === "admin" || false
